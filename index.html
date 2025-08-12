@@ -21,9 +21,9 @@
                     <span></span>
                 </button>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="#founders" class="nav-link active" data-tab="founders">Founders</a></li>
+                    <li><a href="#newsletter" class="nav-link active" data-tab="newsletter">Newsletter</a></li>
                     <li><a href="#competitions" class="nav-link" data-tab="competitions">Competitions & Events</a></li>
-                    <li><a href="#newsletter" class="nav-link" data-tab="newsletter">Newsletter</a></li>
+                    <li><a href="#founders" class="nav-link" data-tab="founders">Founders</a></li>
                 </ul>
             </nav>
         </div>
@@ -31,59 +31,70 @@
 
     <main class="main">
         <div class="container">
-            <!-- Founders Tab -->
-            <section id="founders" class="tab-content active">
+            <!-- Newsletter Tab -->
+            <section id="newsletter" class="tab-content active">
                 <div class="section-header">
-                    <h2>Meet Our Founders</h2>
-                    <p>Passionate students exploring the depths of history, politics, and human culture at HISHK</p>
+                    <h2>Weekly Newsletter</h2>
+                    <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
                 </div>
-                <div class="founders-grid">
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder1.svg" alt="Sarah Chen - President" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Sarah Chen</h3>
-                            <p class="founder-role">President & Co-Founder</p>
-                            <p class="founder-bio">Year 12 student passionate about modern political history and international relations. Winner of the Asia-Pacific Model UN conference and founder of our weekly political debate series.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">Model UN Best Delegate</span>
-                                <span class="achievement">Political Debate Champion</span>
+                <div class="newsletter-controls">
+                    <button class="btn-primary" id="addNewsletterBtn">Add New Newsletter</button>
+                </div>
+                
+                <!-- Add Newsletter Form -->
+                <div class="newsletter-form" id="newsletterForm">
+                    <div class="form-container">
+                        <h3>Add New Newsletter</h3>
+                        <form id="newsletterFormElement">
+                            <div class="form-group">
+                                <label for="newsletterTitle">Newsletter Title</label>
+                                <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., Week of March 4-10, 2024">
                             </div>
-                        </div>
-                    </div>
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder2.svg" alt="James Park - Vice President" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>James Park</h3>
-                            <p class="founder-role">Vice President & Co-Founder</p>
-                            <p class="founder-bio">Year 12 student specializing in East Asian history and comparative politics. Lead organizer of our monthly history symposiums and research competitions on contemporary political issues.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">History Essay Competition Winner</span>
-                                <span class="achievement">Political Research Award</span>
+                            <div class="form-group">
+                                <label for="newsletterDate">Publication Date</label>
+                                <input type="date" id="newsletterDate" name="date" required>
                             </div>
-                        </div>
-                    </div>
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder3.svg" alt="Emma Liu - Secretary" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Emma Liu</h3>
-                            <p class="founder-role">Secretary & Co-Founder</p>
-                            <p class="founder-bio">Year 11 student specializing in cultural history and political philosophy. Editor of our newsletter and coordinator of historical site visits and political guest speaker events.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">Historical Essay Award</span>
-                                <span class="achievement">Philosophy Olympiad</span>
+                            <div class="form-group">
+                                <label for="newsletterContent">Newsletter Content</label>
+                                <textarea id="newsletterContent" name="content" required placeholder="Write your newsletter content here..."></textarea>
                             </div>
-                        </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">Publish Newsletter</button>
+                                <button type="button" class="btn-secondary" id="cancelNewsletterBtn">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="mission-statement">
-                    <h3>Our Mission</h3>
-                    <p>To foster deep understanding of human civilization, critical thinking about contemporary political issues, and appreciation for cultural diversity among HISHK students. We create opportunities for students to engage with history and politics through debates, research, field trips, and meaningful discourse that prepares them for active citizenship.</p>
+
+                <!-- Newsletter Archive -->
+                <div class="newsletters-archive" id="newslettersArchive">
+                    <!-- Sample newsletters for demonstration -->
+                    <div class="newsletter-preview" data-newsletter-id="1">
+                        <div class="newsletter-preview-header">
+                            <h3 class="newsletter-preview-title">Historical Perspectives on Democracy</h3>
+                            <span class="newsletter-preview-date">March 8, 2024</span>
+                        </div>
+                        <p class="newsletter-preview-excerpt">Exploring the evolution of democratic ideals from ancient Athens to modern parliamentary systems...</p>
+                        <button class="read-more-btn">Read Full Article</button>
+                    </div>
+                    
+                    <div class="newsletter-preview" data-newsletter-id="2">
+                        <div class="newsletter-preview-header">
+                            <h3 class="newsletter-preview-title">Cultural Exchange in the Silk Road Era</h3>
+                            <span class="newsletter-preview-date">March 1, 2024</span>
+                        </div>
+                        <p class="newsletter-preview-excerpt">Examining how trade routes facilitated not just commerce but cultural and intellectual exchange...</p>
+                        <button class="read-more-btn">Read Full Article</button>
+                    </div>
+                    
+                    <div class="newsletter-preview" data-newsletter-id="3">
+                        <div class="newsletter-preview-header">
+                            <h3 class="newsletter-preview-title">Modern Political Movements in Asia</h3>
+                            <span class="newsletter-preview-date">February 23, 2024</span>
+                        </div>
+                        <p class="newsletter-preview-excerpt">A comparative analysis of contemporary political developments across Asian democracies...</p>
+                        <button class="read-more-btn">Read Full Article</button>
+                    </div>
                 </div>
             </section>
 
@@ -216,48 +227,81 @@
                 </div>
             </div>
 
-            <!-- Newsletter Tab -->
-            <section id="newsletter" class="tab-content">
+            <!-- Founders Tab -->
+            <section id="founders" class="tab-content">
                 <div class="section-header">
-                    <h2>Weekly Newsletter</h2>
-                    <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
+                    <h2>Meet Our Founders</h2>
+                    <p>Passionate students exploring the depths of history, politics, and human culture at HISHK</p>
                 </div>
-                <div class="newsletter-controls">
-                    <button class="btn-primary" id="addNewsletterBtn">Add New Newsletter</button>
-                </div>
-                
-                <!-- Add Newsletter Form -->
-                <div class="newsletter-form" id="newsletterForm">
-                    <div class="form-container">
-                        <h3>Add New Newsletter</h3>
-                        <form id="newsletterFormElement">
-                            <div class="form-group">
-                                <label for="newsletterTitle">Newsletter Title</label>
-                                <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., Week of March 4-10, 2024">
+                <div class="founders-grid">
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder1.svg" alt="Carmilla Wang - President" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Carmilla Wang</h3>
+                            <p class="founder-role">President & Co-Founder</p>
+                            <p class="founder-bio">Year 12 student with flowing brown hair, passionate about modern political history and international relations. Winner of the Asia-Pacific Model UN conference and founder of our weekly political debate series.</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">Model UN Best Delegate</span>
+                                <span class="achievement">Political Debate Champion</span>
                             </div>
-                            <div class="form-group">
-                                <label for="newsletterDate">Publication Date</label>
-                                <input type="date" id="newsletterDate" name="date" required>
+                        </div>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder2.svg" alt="Maggie Zhu - Vice President" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Maggie Zhu</h3>
+                            <p class="founder-role">Vice President & Co-Founder</p>
+                            <p class="founder-bio">Year 12 student with sleek black hair and stylish glasses, specializing in East Asian history and comparative politics. Lead organizer of our monthly history symposiums and research competitions on contemporary political issues.</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">History Essay Competition Winner</span>
+                                <span class="achievement">Political Research Award</span>
                             </div>
-                            <div class="form-group">
-                                <label for="newsletterContent">Newsletter Content</label>
-                                <textarea id="newsletterContent" name="content" required placeholder="Write your newsletter content here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder3.svg" alt="Michelle Ko - Secretary" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Michelle Ko</h3>
+                            <p class="founder-role">Secretary & Co-Founder</p>
+                            <p class="founder-bio">Year 11 student with warm brown hair and an endearing, cute demeanor, specializing in cultural history and political philosophy. Editor of our newsletter and coordinator of historical site visits and political guest speaker events.</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">Historical Essay Award</span>
+                                <span class="achievement">Philosophy Olympiad</span>
                             </div>
-                            <div class="form-actions">
-                                <button type="submit" class="btn-primary">Publish Newsletter</button>
-                                <button type="button" class="btn-secondary" id="cancelNewsletterBtn">Cancel</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Newsletter Archive -->
-                <div class="newsletters-archive" id="newslettersArchive">
-                    <!-- Newsletters will be loaded here by JavaScript -->
+                <div class="mission-statement">
+                    <h3>Our Mission</h3>
+                    <p>To foster deep understanding of human civilization, critical thinking about contemporary political issues, and appreciation for cultural diversity among HISHK students. We create opportunities for students to engage with history and politics through debates, research, field trips, and meaningful discourse that prepares them for active citizenship.</p>
                 </div>
             </section>
         </div>
     </main>
+
+    <!-- Newsletter Modal -->
+    <div class="newsletter-modal" id="newsletterModal">
+        <div class="newsletter-modal-content">
+            <div class="newsletter-modal-header">
+                <div>
+                    <h3 class="newsletter-modal-title" id="modalNewsletterTitle">Newsletter Title</h3>
+                    <span class="newsletter-modal-date" id="modalNewsletterDate">Date</span>
+                </div>
+                <button class="newsletter-modal-close" id="newsletterModalClose">&times;</button>
+            </div>
+            <div class="newsletter-modal-body">
+                <div class="newsletter-modal-content-text" id="modalNewsletterContent">
+                    Newsletter content will appear here...
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">

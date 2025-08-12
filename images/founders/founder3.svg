@@ -13,7 +13,7 @@
   <circle cx="150" cy="120" r="45" fill="#F0C4A0" stroke="#E3B591" stroke-width="2"/>
   
   <!-- Hair - longer style -->
-  <path d="M110 80 Q150 60 190 80 Q195 90 185 110 Q170 105 150 110 Q130 105 115 110 Q105 90 110 80" fill="#4A2C17"/>
+  <path d="M110 80 Q150 60 190 80 Q195 90 185 110 Q170 105 150 110 Q130 105 115 110 Q105 90 110 80" fill="#8B4513"/>
   
   <!-- Eyes -->
   <circle cx="135" cy="115" r="3" fill="#2C1B0E"/>
@@ -40,6 +40,6 @@
   <path d="M135 172 Q150 168 165 172" stroke="#D4AF37" stroke-width="2" fill="none"/>
   
   <!-- Academic elements -->
-  <text x="150" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#FEFCF7" font-weight="bold">Emma Liu</text>
+  <text x="150" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#FEFCF7" font-weight="bold">Michelle Ko</text>
   <text x="150" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#D4AF37">Secretary</text>
 </svg>

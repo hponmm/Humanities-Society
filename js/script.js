@@ -202,106 +202,129 @@ class HISHKHumanitiesSociety {
         return [
             {
                 id: '1',
-                title: 'Week of March 4-10, 2024',
-                date: '2024-03-10',
+                title: 'Historical Perspectives on Democracy',
+                date: '2024-03-08',
                 content: `Dear HISHK Humanities Society Members,
 
-Welcome to our latest newsletter! This week has been filled with exciting discoveries in history and politics, plus upcoming intellectual opportunities.
+This week, we delve deep into the fascinating evolution of democratic ideals, tracing their journey from the ancient agora of Athens to the modern parliamentary chambers of today.
 
-🏛️ ACHIEVEMENTS THIS WEEK:
-• Congratulations to our debate team for winning the Inter-School Political Philosophy Championship
-• Sarah Chen received recognition for her research on "Hong Kong's Democratic Movement" at the Youth Political Forum
-• Our Model UN delegation successfully represented China, UK, and Canada at the Asia-Pacific Youth Summit
+DEMOCRACY THROUGH THE AGES
 
-📚 UPCOMING EVENTS:
-• March 15: International History Olympiad (registration closes March 12)
-• March 18: Weekly seminar - "The Rise and Fall of Empires" (Room 204, 4:00 PM)
-• March 22: Guest lecture by Professor David Kim on "East Asian Political Systems" (Main Auditorium, 2:00 PM)
-• March 25: Historical site visit to the Hong Kong Museum of History
+Ancient Athens gave us the foundational concept of democracy - "rule by the people." However, their version was quite different from our modern understanding. Only free male citizens could participate, excluding women, slaves, and foreigners. This limited participation raises important questions about inclusivity that remain relevant today.
 
-💡 HUMANITIES TIP OF THE WEEK:
-When studying historical events, always consider multiple perspectives. Primary sources from different viewpoints will give you a more complete understanding of any historical moment.
+The Roman Republic introduced representative elements that would later influence modern democratic systems. Their concept of checks and balances, with consuls, senate, and popular assemblies, provided a framework that inspired the American founding fathers centuries later.
 
-📖 RECOMMENDED READING:
-• "Sapiens: A Brief History of Humankind" by Yuval Noah Harari
-• "The Clash of Civilizations" by Samuel P. Huntington
-• "Hong Kong: A Political History" by Steve Tsang
+MEDIEVAL AND RENAISSANCE DEVELOPMENTS
 
-Keep exploring the depths of human experience, and remember - understanding our past illuminates our future!
+During the medieval period, democratic ideals seemed to fade, replaced by feudalism and absolute monarchy. However, institutions like the English Parliament (established in 1066) began to limit royal power, creating precedents for constitutional government.
+
+The Renaissance brought renewed interest in classical texts and democratic theory. Thinkers like Machiavelli examined the nature of political power, while others explored concepts of natural rights and social contracts.
+
+MODERN DEMOCRATIC EVOLUTION
+
+The Enlightenment marked a turning point. John Locke's theories on government by consent, Montesquieu's separation of powers, and Rousseau's social contract theory laid intellectual groundwork for modern democracy.
+
+The American and French Revolutions put these theories into practice, though with mixed results. The American system balanced federal and state powers, while the French Revolution showed both the promise and perils of rapid democratic change.
+
+CONTEMPORARY CHALLENGES
+
+Today, democracy faces new challenges: social media's impact on public discourse, the rise of populism, and questions about direct versus representative democracy. Understanding historical precedents helps us navigate these modern dilemmas.
+
+Our next seminar will explore these themes further. Join us Monday, March 11th, at 4:00 PM in Conference Room A.
 
 Best regards,
-The Editorial Team`,
-                timestamp: '2024-03-10T10:00:00Z'
+The Editorial Committee`,
+                timestamp: '2024-03-08T10:00:00Z'
             },
             {
                 id: '2',
-                title: 'Week of February 26 - March 3, 2024',
-                date: '2024-03-03',
-                content: `Dear Humanities Society Members,
+                title: 'Cultural Exchange in the Silk Road Era',
+                date: '2024-03-01',
+                content: `Dear Members,
 
-Another intellectually stimulating week has passed, and we're excited to share our latest historical and political discoveries with you all.
+The Silk Road was far more than a trade route - it was history's greatest cultural exchange network, connecting civilizations and shaping the world as we know it.
 
-🎯 HIGHLIGHTS:
-• James Park's research paper on "The Impact of Colonial Legacy on Hong Kong's Political Development" has been accepted for publication in the Asian Student Historical Review
-• Our political debate team placed 1st in the Regional Political Philosophy Championship
-• Emma Liu organized a successful peer discussion on "Women's Suffrage Movements Across Cultures"
+THE NETWORK OF NETWORKS
 
-🏛️ HISTORY CORNER:
-This week we explored the fascinating parallels between ancient Roman governance and modern democratic systems. Did you know that many of our contemporary political concepts can be traced back to Roman innovations in civic organization?
+Spanning over 4,000 miles from China to the Mediterranean, the Silk Road wasn't a single road but a complex network of trade routes. Merchants, pilgrims, diplomats, and scholars traveled these paths, carrying not just goods but ideas, technologies, and beliefs.
 
-📅 UPCOMING WORKSHOPS:
-• March 8: "Primary Source Analysis Techniques" workshop with university historians
-• March 10: "Writing Compelling Historical Arguments" masterclass
-• March 12: "Understanding Political Ideologies" seminar series
+ECONOMIC FOUNDATIONS
 
-🌟 MEMBER SPOTLIGHT:
-This week we feature Alex Chen (Year 11) who recently won the Hong Kong Young Historians Competition with his documentary on "The Evolution of Hong Kong Identity." His passion for connecting past and present exemplifies our society's mission.
+While silk gave the route its name, the trade was incredibly diverse. From China came silk, tea, and porcelain. Central Asia contributed horses and jade. The Middle East offered spices and precious metals. This economic foundation made possible the cultural exchange that followed.
 
-📚 STUDY GROUP UPDATES:
-• Ancient Civilizations: Tuesdays & Thursdays, 3:30 PM - Room 201
-• Modern Politics: Wednesdays & Fridays, 4:00 PM - Conference Room B
-• Cultural Studies: Mondays, 3:30 PM - Library Discussion Space
+TECHNOLOGICAL TRANSFER
 
-Until next week, keep questioning, exploring, and connecting the threads of human experience!
+Perhaps the most significant aspect was technological diffusion. Paper-making spread from China to the Islamic world and eventually to Europe. The magnetic compass revolutionized navigation. Mathematical concepts, including the numeral system we use today, traveled along these routes.
 
-Editorial Committee
-HISHK Humanities Society`,
-                timestamp: '2024-03-03T10:00:00Z'
+RELIGIOUS AND PHILOSOPHICAL EXCHANGE
+
+Buddhism spread along the Silk Road from India to China, adapting to local cultures along the way. Islamic scholarship preserved and transmitted Greek philosophical works. Christian communities established themselves in Central Asia, creating unique cultural syntheses.
+
+ARTISTIC FUSION
+
+The artistic legacy is remarkable. Gandhara sculptures show Greek influence on Buddhist art. Persian miniatures reflect Chinese techniques. Musical instruments traveled across continents, creating new forms of cultural expression.
+
+LINGUISTIC IMPACT
+
+Languages borrowed extensively from each other. Chinese adopted Sanskrit terms for Buddhist concepts. Persian vocabulary entered numerous languages. This linguistic exchange enriched human communication across cultures.
+
+LESSONS FOR TODAY
+
+The Silk Road demonstrates that globalization isn't new - cultural exchange has always driven human progress. However, it also shows that successful exchange requires mutual respect and understanding, something we must remember in our interconnected world.
+
+Our upcoming field trip to the Hong Kong Museum of History will explore these themes through their Silk Road exhibition. Sign up by March 5th!
+
+Academically yours,
+Michelle Ko, Newsletter Editor`,
+                timestamp: '2024-03-01T10:00:00Z'
             },
             {
                 id: '3',
-                title: 'Competition Applications Now Open!',
-                date: '2024-02-20',
-                content: `Dear Humanities Society Members,
+                title: 'Modern Political Movements in Asia',
+                date: '2024-02-23',
+                content: `Dear Humanities Society,
 
-We're thrilled to announce that applications are now open for all our upcoming competitions and events!
+Asia's political landscape has undergone remarkable transformation in recent decades. Understanding these changes provides crucial insight into contemporary global politics.
 
-🏆 NOW ACCEPTING APPLICATIONS:
-• HISHK History Bowl Championship - March 15
-• Political Philosophy Debate Tournament - March 22
-• HISHK Mini Model United Nations - April 5
-• Student Historical Research Symposium - April 12
-• Cultural Heritage Essay Competition - May 8
-• Humanities Quiz Night - May 15
+DEMOCRATIC TRANSITIONS
 
-📝 HOW TO APPLY:
-Visit the Competitions & Events tab on our website and click "Apply Now" for any event that interests you. Each competition has its own requirements and format.
+South Korea's transition from military dictatorship to vibrant democracy exemplifies successful democratization. The 1987 pro-democracy movements, led largely by students and civil society, created foundations for today's robust democratic institutions.
 
-💡 APPLICATION TIPS:
-• Apply early - some competitions have limited spots
-• For team events, make sure all members are committed
-• Highlight relevant experience in your application
-• Don't be afraid to apply even if you're new to the subject!
+Taiwan's democratization followed a similar pattern, with the lifting of martial law in 1987 marking the beginning of political liberalization. The Sunflower Student Movement of 2014 showed how younger generations continue to shape democratic discourse.
 
-🎯 WHY PARTICIPATE:
-Our competitions are designed to challenge you intellectually while providing a supportive environment to explore your passions in history and politics. Plus, they look great on university applications!
+CHALLENGES TO DEMOCRACY
 
-Questions? Contact any of our founders or email us directly.
+However, democratic backsliding concerns many observers. Thailand's cycle of coups and constitutional crises illustrates how fragile democratic institutions can be. Military interventions in 2006 and 2014 disrupted democratic processes, leading to ongoing political polarization.
 
-Looking forward to seeing your applications!
+Myanmar's return to military rule in 2021 represents one of the most dramatic reversals, undoing a decade of democratic progress and highlighting the persistent influence of military institutions in politics.
 
-The HISHK Humanities Society Team`,
-                timestamp: '2024-02-20T10:00:00Z'
+YOUTH MOVEMENTS
+
+Young people have been at the forefront of political change across Asia. Hong Kong's Umbrella Movement and more recent protests demonstrated how students can mobilize for political reform. Similar youth-led movements in Thailand and Myanmar show this pattern extending across the region.
+
+These movements often use social media and innovative protest tactics, adapting traditional forms of political action to digital age realities.
+
+ECONOMIC AND POLITICAL DEVELOPMENT
+
+The relationship between economic growth and political development remains complex. While South Korea and Taiwan democratized alongside economic development, China's economic success hasn't led to similar political liberalization.
+
+Singapore's model of economic success with limited political competition offers another variant, challenging simple relationships between prosperity and democracy.
+
+REGIONAL ORGANIZATIONS
+
+ASEAN's role in regional politics reflects tensions between sovereignty and cooperation. The organization's non-interference principle sometimes conflicts with democratic values, as seen in responses to Myanmar's coup.
+
+IMPLICATIONS FOR GLOBAL POLITICS
+
+Asia's political developments have global significance. The region's economic importance means political stability here affects worldwide prosperity. Democratic movements inspire similar efforts globally, while authoritarian responses provide cautionary examples.
+
+Understanding these dynamics helps us analyze not just Asian politics, but broader patterns of political change in our interconnected world.
+
+Next week, we'll host Dr. Sarah Kim from HKU for a lecture on "Youth Politics in Contemporary Asia." Tuesday, February 27th, 3:30 PM in the Main Auditorium.
+
+Analytically yours,
+Carmilla Wang, Society President`,
+                timestamp: '2024-02-23T10:00:00Z'
             }
         ];
     }
@@ -321,15 +344,30 @@ The HISHK Humanities Society Team`,
             return;
         }
 
-        container.innerHTML = newsletters.map(newsletter => this.createNewsletterHTML(newsletter)).join('');
+        container.innerHTML = newsletters.map(newsletter => this.createNewsletterPreviewHTML(newsletter)).join('');
         
-        // Bind delete events
-        container.querySelectorAll('.delete-newsletter').forEach(btn => {
-            btn.addEventListener('click', (e) => this.deleteNewsletter(e.target.dataset.id));
+        // Bind read more events
+        container.querySelectorAll('.read-more-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showNewsletterModal(e.target.dataset.id);
+            });
         });
+
+        // Bind newsletter preview click events
+        container.querySelectorAll('.newsletter-preview').forEach(preview => {
+            preview.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('read-more-btn')) {
+                    this.showNewsletterModal(preview.dataset.newsletterId);
+                }
+            });
+        });
+        
+        // Bind newsletter modal events
+        this.bindNewsletterModalEvents();
     }
 
-    createNewsletterHTML(newsletter) {
+    createNewsletterPreviewHTML(newsletter) {
         const date = new Date(newsletter.date);
         const formattedDate = date.toLocaleDateString('en-GB', {
             year: 'numeric',
@@ -337,18 +375,87 @@ The HISHK Humanities Society Team`,
             day: 'numeric'
         });
 
+        // Create excerpt from content (first 150 characters)
+        const excerpt = newsletter.content.length > 150 
+            ? newsletter.content.substring(0, 150) + '...' 
+            : newsletter.content;
+
         return `
-            <div class="newsletter-item" data-id="${newsletter.id}">
-                <div class="newsletter-header">
-                    <h3 class="newsletter-title">${this.escapeHtml(newsletter.title)}</h3>
-                    <div class="newsletter-date">${formattedDate}</div>
+            <div class="newsletter-preview" data-newsletter-id="${newsletter.id}">
+                <div class="newsletter-preview-header">
+                    <h3 class="newsletter-preview-title">${this.escapeHtml(newsletter.title)}</h3>
+                    <span class="newsletter-preview-date">${formattedDate}</span>
                 </div>
-                <div class="newsletter-content">${this.escapeHtml(newsletter.content)}</div>
-                <div class="newsletter-actions">
-                    <button class="btn-small delete delete-newsletter" data-id="${newsletter.id}">Delete</button>
-                </div>
+                <p class="newsletter-preview-excerpt">${this.escapeHtml(excerpt)}</p>
+                <button class="read-more-btn" data-id="${newsletter.id}">Read Full Article</button>
             </div>
         `;
+    }
+
+    bindNewsletterModalEvents() {
+        const newsletterModal = document.getElementById('newsletterModal');
+        const newsletterModalClose = document.getElementById('newsletterModalClose');
+        
+        if (newsletterModalClose) {
+            newsletterModalClose.addEventListener('click', () => this.hideNewsletterModal());
+        }
+        
+        // Close modal when clicking outside
+        if (newsletterModal) {
+            newsletterModal.addEventListener('click', (e) => {
+                if (e.target === newsletterModal) {
+                    this.hideNewsletterModal();
+                }
+            });
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && newsletterModal && newsletterModal.classList.contains('active')) {
+                this.hideNewsletterModal();
+            }
+        });
+    }
+
+    showNewsletterModal(newsletterId) {
+        const newsletters = this.getNewsletters();
+        const newsletter = newsletters.find(n => n.id === newsletterId);
+        
+        if (!newsletter) return;
+        
+        const modal = document.getElementById('newsletterModal');
+        const modalTitle = document.getElementById('modalNewsletterTitle');
+        const modalDate = document.getElementById('modalNewsletterDate');
+        const modalContent = document.getElementById('modalNewsletterContent');
+        
+        if (!modal || !modalTitle || !modalDate || !modalContent) return;
+        
+        const date = new Date(newsletter.date);
+        const formattedDate = date.toLocaleDateString('en-GB', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        modalTitle.textContent = newsletter.title;
+        modalDate.textContent = formattedDate;
+        modalContent.textContent = newsletter.content;
+        
+        modal.classList.add('active');
+        
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    }
+
+    hideNewsletterModal() {
+        const modal = document.getElementById('newsletterModal');
+        
+        if (modal) {
+            modal.classList.remove('active');
+        }
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
     }
 
     deleteNewsletter(id) {
