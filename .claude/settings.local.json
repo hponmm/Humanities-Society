@@ -1,1 +1,10 @@
-
+ {
+    "permissions": {
+      "allow": [
+        "WebFetch(domain:www.cssdesignawards.com)",
+        "Bash(mkdir:*)"
+      ],
+      "deny": [],
+      "ask": []
+    }
+  }
