@@ -1,0 +1,45 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A0845C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B6914;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="url(#bg2)"/>
+  
+  <!-- Face -->
+  <circle cx="150" cy="120" r="45" fill="#F5C6A0" stroke="#E8B794" stroke-width="2"/>
+  
+  <!-- Hair -->
+  <path d="M108 85 Q150 65 192 85 Q192 75 180 65 Q150 55 120 65 Q108 75 108 85" fill="#1A1A1A"/>
+  <rect x="145" y="75" width="10" height="25" fill="#1A1A1A"/>
+  
+  <!-- Eyes -->
+  <circle cx="135" cy="115" r="3" fill="#1A1A1A"/>
+  <circle cx="165" cy="115" r="3" fill="#1A1A1A"/>
+  
+  <!-- Glasses -->
+  <circle cx="135" cy="115" r="15" fill="none" stroke="#2F2920" stroke-width="2"/>
+  <circle cx="165" cy="115" r="15" fill="none" stroke="#2F2920" stroke-width="2"/>
+  <line x1="150" y1="115" x2="150" y2="115" stroke="#2F2920" stroke-width="2"/>
+  
+  <!-- Nose -->
+  <line x1="150" y1="125" x2="150" y2="135" stroke="#E8B794" stroke-width="1"/>
+  
+  <!-- Mouth -->
+  <path d="M142 140 Q150 145 158 140" stroke="#D4969B" stroke-width="2" fill="none"/>
+  
+  <!-- Body/Clothing -->
+  <rect x="120" y="165" width="60" height="80" fill="#2F2920" rx="5"/>
+  <rect x="125" y="170" width="50" height="70" fill="#A0845C" rx="3"/>
+  
+  <!-- Tie -->
+  <polygon points="150,170 145,180 155,180" fill="#8B6914"/>
+  <rect x="148" y="180" width="4" height="20" fill="#8B6914"/>
+  
+  <!-- Academic elements -->
+  <text x="150" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#FEFCF7" font-weight="bold">James Park</text>
+  <text x="150" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#D4AF37">Vice President</text>
+</svg>
