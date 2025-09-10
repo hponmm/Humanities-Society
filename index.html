@@ -21,9 +21,9 @@
                     <span></span>
                 </button>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="#newsletter" class="nav-link active" data-tab="newsletter">Newsletter</a></li>
+                    <li><a href="#home" class="nav-link active" data-tab="home">Home</a></li>
+                    <li><a href="#newsletter" class="nav-link" data-tab="newsletter">Newsletter</a></li>
                     <li><a href="#competitions" class="nav-link" data-tab="competitions">Competitions & Events</a></li>
-                    <li><a href="#founders" class="nav-link" data-tab="founders">Founders</a></li>
                 </ul>
             </nav>
         </div>
@@ -31,14 +31,88 @@
 
     <main class="main">
         <div class="container">
+            <!-- Home Tab -->
+            <section id="home" class="tab-content active">
+                <div class="mission-statement">
+                    <h3>Our Mission</h3>
+                    <p>To foster deep understanding of human civilization, critical thinking about contemporary political issues, and appreciation for cultural diversity among HISHK students. We create opportunities for students to engage with history and politics through debates, research, field trips, and meaningful discourse that prepares them for active citizenship.</p>
+                </div>
+                <div class="section-header">
+                    <h2>Meet Our Founders</h2>
+                    <p>Passionate students exploring the depths of history, politics, and human culture at HISHK</p>
+                </div>
+                <div class="founders-grid">
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder1.svg" alt="Carmilla Wang" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Carmilla Wang</h3>
+                            <p class="founder-role">Co-Founder</p>
+                            <p class="founder-bio">TBD</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">Model UN Best Delegate</span>
+                                <span class="achievement">Political Debate Champion</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder2.svg" alt="Maggie Zhu" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Maggie Zhu</h3>
+                            <p class="founder-role">Co-Founder</p>
+                            <p class="founder-bio">TBD</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">History Essay Competition Winner</span>
+                                <span class="achievement">Political Research Award</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder3.svg" alt="Michelle Ko" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Michelle Ko</h3>
+                            <p class="founder-role">Co-Founder</p>
+                            <p class="founder-bio">TBD</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">Historical Essay Award</span>
+                                <span class="achievement">Philosophy Olympiad</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="images/founders/founder4.svg" alt="Laila Tse" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Laila Tse</h3>
+                            <p class="founder-role">Co-Founder</p>
+                            <p class="founder-bio">TBD</p>
+                            <div class="founder-achievements">
+                                <span class="achievement">Historical Essay Award</span>
+                                <span class="achievement">Philosophy Olympiad</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Newsletter Tab -->
-            <section id="newsletter" class="tab-content active">
+            <section id="newsletter" class="tab-content">
                 <div class="section-header">
                     <h2>Weekly Newsletter</h2>
                     <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
                 </div>
                 <div class="newsletter-controls">
                     <button class="btn-primary" id="addNewsletterBtn">Add New Newsletter</button>
+                    <div class="search-container">
+                        <input type="text" id="authorSearch" placeholder="Search by author..." class="search-input">
+                        <button class="btn-secondary" id="clearSearch">Clear</button>
+                    </div>
                 </div>
                 
                 <!-- Add Newsletter Form -->
@@ -51,12 +125,26 @@
                                 <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., Week of March 4-10, 2024">
                             </div>
                             <div class="form-group">
+                                <label for="newsletterAuthor">Author Name</label>
+                                <input type="text" id="newsletterAuthor" name="author" required placeholder="e.g., Michelle Ko">
+                            </div>
+                            <div class="form-group">
                                 <label for="newsletterDate">Publication Date</label>
                                 <input type="date" id="newsletterDate" name="date" required>
                             </div>
                             <div class="form-group">
                                 <label for="newsletterContent">Newsletter Content</label>
                                 <textarea id="newsletterContent" name="content" required placeholder="Write your newsletter content here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="newsletterImageUrl">Image URL (optional)</label>
+                                <input type="url" id="newsletterImageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                                <small style="color: var(--text-light); font-size: 12px;">Add an image to your newsletter (JPEG, PNG, GIF)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="newsletterVideoUrl">Video URL (optional)</label>
+                                <input type="url" id="newsletterVideoUrl" name="videoUrl" placeholder="https://youtube.com/watch?v=...">
+                                <small style="color: var(--text-light); font-size: 12px;">Add a YouTube or video link to your newsletter</small>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-primary">Publish Newsletter</button>
@@ -104,7 +192,79 @@
                     <h2>Our Hosted Competitions</h2>
                     <p>Join our exclusive humanities competitions and events - organized by students, for students</p>
                 </div>
-                <div class="competitions-grid">
+                <div class="event-controls">
+                    <button class="btn-primary" id="addEventBtn">Add New Event</button>
+                </div>
+                
+                <!-- Add Event Form -->
+                <div class="event-form" id="eventForm">
+                    <div class="form-container">
+                        <h3>Create New Event</h3>
+                        <form id="eventFormElement">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventName">Event Name *</label>
+                                    <input type="text" id="eventName" name="name" required placeholder="e.g., History Bowl Championship">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDate">Event Date *</label>
+                                    <input type="date" id="eventDate" name="date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventStartTime">Start Time *</label>
+                                    <input type="time" id="eventStartTime" name="startTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventEndTime">End Time *</label>
+                                    <input type="time" id="eventEndTime" name="endTime" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventHosts">Event Hosts *</label>
+                                <input type="text" id="eventHosts" name="hosts" required placeholder="e.g., History Club, Debate Society">
+                                <small>Separate multiple hosts with commas</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventDescription">Event Description *</label>
+                                <textarea id="eventDescription" name="description" required placeholder="Describe your event..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventTags">Event Tags</label>
+                                <input type="text" id="eventTags" name="tags" placeholder="e.g., history, debate, competition, workshop">
+                                <small>Separate tags with commas</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventLocation">Location</label>
+                                <input type="text" id="eventLocation" name="location" placeholder="e.g., Conference Room A, Online, Library">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventCapacity">Maximum Participants</label>
+                                <input type="number" id="eventCapacity" name="capacity" min="1" placeholder="Leave blank for unlimited">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="eventFormUrl">Application Form URL</label>
+                                <input type="url" id="eventFormUrl" name="formUrl" placeholder="https://forms.google.com/...">
+                                <small>Link to Google Form, Microsoft Form, or other application form</small>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">Create Event</button>
+                                <button type="button" class="btn-secondary" id="cancelEventBtn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="competitions-grid" id="eventsGrid">
                     <div class="competition-card current">
                         <div class="competition-status">Registration Open</div>
                         <h3>HISHK History Bowl Championship</h3>
@@ -227,76 +387,21 @@
                 </div>
             </div>
 
-            <!-- Founders Tab -->
-            <section id="founders" class="tab-content">
-                <div class="section-header">
-                    <h2>Meet Our Founders</h2>
-                    <p>Passionate students exploring the depths of history, politics, and human culture at HISHK</p>
-                </div>
-                <div class="founders-grid">
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder1.svg" alt="Carmilla Wang - President" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Carmilla Wang</h3>
-                            <p class="founder-role">President & Co-Founder</p>
-                            <p class="founder-bio">Year 12 student with flowing brown hair, passionate about modern political history and international relations. Winner of the Asia-Pacific Model UN conference and founder of our weekly political debate series.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">Model UN Best Delegate</span>
-                                <span class="achievement">Political Debate Champion</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder2.svg" alt="Maggie Zhu - Vice President" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Maggie Zhu</h3>
-                            <p class="founder-role">Vice President & Co-Founder</p>
-                            <p class="founder-bio">Year 12 student with sleek black hair and stylish glasses, specializing in East Asian history and comparative politics. Lead organizer of our monthly history symposiums and research competitions on contemporary political issues.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">History Essay Competition Winner</span>
-                                <span class="achievement">Political Research Award</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder3.svg" alt="Michelle Ko - Secretary" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Michelle Ko</h3>
-                            <p class="founder-role">Secretary & Co-Founder</p>
-                            <p class="founder-bio">Year 11 student with warm brown hair and an endearing, cute demeanor, specializing in cultural history and political philosophy. Editor of our newsletter and coordinator of historical site visits and political guest speaker events.</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">Historical Essay Award</span>
-                                <span class="achievement">Philosophy Olympiad</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mission-statement">
-                    <h3>Our Mission</h3>
-                    <p>To foster deep understanding of human civilization, critical thinking about contemporary political issues, and appreciation for cultural diversity among HISHK students. We create opportunities for students to engage with history and politics through debates, research, field trips, and meaningful discourse that prepares them for active citizenship.</p>
-                </div>
-            </section>
         </div>
     </main>
 
     <!-- Newsletter Modal -->
-    <div class="newsletter-modal" id="newsletterModal">
-        <div class="newsletter-modal-content">
-            <div class="newsletter-modal-header">
+    <div class="modal" id="newsletterModal">
+        <div class="modal-content">
+            <div class="modal-header">
                 <div>
-                    <h3 class="newsletter-modal-title" id="modalNewsletterTitle">Newsletter Title</h3>
-                    <span class="newsletter-modal-date" id="modalNewsletterDate">Date</span>
+                    <h3 id="modalNewsletterTitle">Newsletter Title</h3>
+                    <span id="modalNewsletterDate">Date</span>
                 </div>
-                <button class="newsletter-modal-close" id="newsletterModalClose">&times;</button>
+                <button class="modal-close" id="newsletterModalClose">&times;</button>
             </div>
-            <div class="newsletter-modal-body">
-                <div class="newsletter-modal-content-text" id="modalNewsletterContent">
+            <div class="modal-body">
+                <div id="modalNewsletterContent">
                     Newsletter content will appear here...
                 </div>
             </div>

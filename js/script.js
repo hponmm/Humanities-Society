@@ -5,6 +5,7 @@ class HISHKHumanitiesSociety {
     constructor() {
         this.init();
         this.loadNewsletters();
+        this.loadEvents();
     }
 
     init() {
@@ -51,6 +52,39 @@ class HISHKHumanitiesSociety {
 
         if (newsletterFormElement) {
             newsletterFormElement.addEventListener('submit', (e) => this.handleNewsletterSubmit(e));
+        }
+        
+        // Author search functionality
+        const authorSearch = document.getElementById('authorSearch');
+        const clearSearch = document.getElementById('clearSearch');
+        
+        if (authorSearch) {
+            authorSearch.addEventListener('input', (e) => this.handleAuthorSearch(e.target.value));
+        }
+        
+        if (clearSearch) {
+            clearSearch.addEventListener('click', () => {
+                if (authorSearch) authorSearch.value = '';
+                this.loadNewsletters();
+            });
+        }
+        
+        // Event form
+        const addEventBtn = document.getElementById('addEventBtn');
+        const eventForm = document.getElementById('eventForm');
+        const cancelEventBtn = document.getElementById('cancelEventBtn');
+        const eventFormElement = document.getElementById('eventFormElement');
+        
+        if (addEventBtn) {
+            addEventBtn.addEventListener('click', () => this.showEventForm());
+        }
+        
+        if (cancelEventBtn) {
+            cancelEventBtn.addEventListener('click', () => this.hideEventForm());
+        }
+        
+        if (eventFormElement) {
+            eventFormElement.addEventListener('submit', (e) => this.handleEventSubmit(e));
         }
         
         // Competition application modal
@@ -163,17 +197,23 @@ class HISHKHumanitiesSociety {
         }
     }
 
-    handleNewsletterSubmit(e) {
+    async handleNewsletterSubmit(e) {
         e.preventDefault();
         
         const formData = new FormData(e.target);
         const newsletter = {
             id: Date.now().toString(),
             title: formData.get('title'),
+            author: formData.get('author') || '',
             date: formData.get('date'),
             content: formData.get('content'),
+            imageUrl: formData.get('imageUrl') || '',
+            videoUrl: formData.get('videoUrl') || '',
             timestamp: new Date().toISOString()
         };
+        
+        // Debug log to check values
+        console.log('Newsletter being saved:', newsletter);
 
         // Validate required fields
         if (!newsletter.title || !newsletter.date || !newsletter.content) {
@@ -181,21 +221,40 @@ class HISHKHumanitiesSociety {
             return;
         }
 
-        this.saveNewsletter(newsletter);
+        await this.saveNewsletter(newsletter);
         this.hideNewsletterForm();
         this.loadNewsletters();
         this.showNotification('Newsletter published successfully!', 'success');
     }
 
-    saveNewsletter(newsletter) {
-        let newsletters = this.getNewsletters();
-        newsletters.unshift(newsletter); // Add to beginning of array
-        localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+    async saveNewsletter(newsletter) {
+        try {
+            const response = await fetch('http://localhost:3000/api/newsletters', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newsletter)
+            });
+            if (!response.ok) throw new Error('Failed to save');
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to save newsletter to server:', error);
+            // Fallback to localStorage if server is offline
+            let newsletters = await this.getNewsletters();
+            newsletters.unshift(newsletter);
+            localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+        }
     }
 
-    getNewsletters() {
-        const stored = localStorage.getItem('hishk_newsletters');
-        return stored ? JSON.parse(stored) : this.getDefaultNewsletters();
+    async getNewsletters() {
+        try {
+            const response = await fetch('http://localhost:3000/api/newsletters');
+            if (!response.ok) throw new Error('Failed to fetch');
+            const newsletters = await response.json();
+            return newsletters.length > 0 ? newsletters : this.getDefaultNewsletters();
+        } catch (error) {
+            console.warn('Using default newsletters, server may be offline:', error);
+            return this.getDefaultNewsletters();
+        }
     }
 
     getDefaultNewsletters() {
@@ -204,6 +263,7 @@ class HISHKHumanitiesSociety {
                 id: '1',
                 title: 'Historical Perspectives on Democracy',
                 date: '2024-03-08',
+                author: 'The Editorial Committee',
                 content: `Dear HISHK Humanities Society Members,
 
 This week, we delve deep into the fascinating evolution of democratic ideals, tracing their journey from the ancient agora of Athens to the modern parliamentary chambers of today.
@@ -240,6 +300,7 @@ The Editorial Committee`,
                 id: '2',
                 title: 'Cultural Exchange in the Silk Road Era',
                 date: '2024-03-01',
+                author: 'Michelle Ko',
                 content: `Dear Members,
 
 The Silk Road was far more than a trade route - it was history's greatest cultural exchange network, connecting civilizations and shaping the world as we know it.
@@ -282,6 +343,7 @@ Michelle Ko, Newsletter Editor`,
                 id: '3',
                 title: 'Modern Political Movements in Asia',
                 date: '2024-02-23',
+                author: 'Carmilla Wang',
                 content: `Dear Humanities Society,
 
 Asia's political landscape has undergone remarkable transformation in recent decades. Understanding these changes provides crucial insight into contemporary global politics.
@@ -329,16 +391,23 @@ Carmilla Wang, Society President`,
         ];
     }
 
-    loadNewsletters() {
-        const newsletters = this.getNewsletters();
+    async loadNewsletters(filterAuthor = '') {
+        let newsletters = await this.getNewsletters();
         const container = document.getElementById('newslettersArchive');
         
         if (!container) return;
 
+        // Filter by author if search term provided
+        if (filterAuthor) {
+            newsletters = newsletters.filter(n => 
+                (n.author || 'Anonymous').toLowerCase().includes(filterAuthor.toLowerCase())
+            );
+        }
+
         if (newsletters.length === 0) {
             container.innerHTML = `
                 <div class="no-newsletters">
-                    <p>No newsletters published yet. Click "Add New Newsletter" to create the first one!</p>
+                    <p>${filterAuthor ? `No newsletters found by author "${filterAuthor}"` : 'No newsletters published yet. Click "Add New Newsletter" to create the first one!'}</p>
                 </div>
             `;
             return;
@@ -353,11 +422,19 @@ Carmilla Wang, Society President`,
                 this.showNewsletterModal(e.target.dataset.id);
             });
         });
+        
+        // Bind delete events
+        container.querySelectorAll('.delete-newsletter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.deleteNewsletter(e.target.dataset.id);
+            });
+        });
 
         // Bind newsletter preview click events
         container.querySelectorAll('.newsletter-preview').forEach(preview => {
             preview.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('read-more-btn')) {
+                if (!e.target.classList.contains('read-more-btn') && !e.target.classList.contains('delete-newsletter-btn')) {
                     this.showNewsletterModal(preview.dataset.newsletterId);
                 }
             });
@@ -380,16 +457,35 @@ Carmilla Wang, Society President`,
             ? newsletter.content.substring(0, 150) + '...' 
             : newsletter.content;
 
+        const author = newsletter.author || 'Anonymous';
+
+        const hasMedia = newsletter.imageUrl || newsletter.videoUrl;
+        const mediaIndicator = hasMedia ? `
+            <div class="newsletter-media-indicators">
+                ${newsletter.imageUrl ? '<span class="media-indicator">📷 Image</span>' : ''}
+                ${newsletter.videoUrl ? '<span class="media-indicator">🎥 Video</span>' : ''}
+            </div>
+        ` : '';
+
         return `
             <div class="newsletter-preview" data-newsletter-id="${newsletter.id}">
                 <div class="newsletter-preview-header">
                     <h3 class="newsletter-preview-title">${this.escapeHtml(newsletter.title)}</h3>
                     <span class="newsletter-preview-date">${formattedDate}</span>
                 </div>
+                <p class="newsletter-preview-author">By ${this.escapeHtml(author)}</p>
+                ${mediaIndicator}
                 <p class="newsletter-preview-excerpt">${this.escapeHtml(excerpt)}</p>
-                <button class="read-more-btn" data-id="${newsletter.id}">Read Full Article</button>
+                <div class="newsletter-preview-actions">
+                    <button class="read-more-btn" data-id="${newsletter.id}">Read Full Article</button>
+                    <button class="delete-newsletter-btn" data-id="${newsletter.id}">Delete</button>
+                </div>
             </div>
         `;
+    }
+    
+    handleAuthorSearch(searchTerm) {
+        this.loadNewsletters(searchTerm);
     }
 
     bindNewsletterModalEvents() {
@@ -417,8 +513,8 @@ Carmilla Wang, Society President`,
         });
     }
 
-    showNewsletterModal(newsletterId) {
-        const newsletters = this.getNewsletters();
+    async showNewsletterModal(newsletterId) {
+        const newsletters = await this.getNewsletters();
         const newsletter = newsletters.find(n => n.id === newsletterId);
         
         if (!newsletter) return;
@@ -438,8 +534,45 @@ Carmilla Wang, Society President`,
         });
         
         modalTitle.textContent = newsletter.title;
-        modalDate.textContent = formattedDate;
-        modalContent.textContent = newsletter.content;
+        modalDate.textContent = `${formattedDate} | By ${newsletter.author || 'Anonymous'}`;
+        
+        // Build content with media
+        let contentHTML = '';
+        
+        // Add image if present
+        if (newsletter.imageUrl) {
+            contentHTML += `<div class="newsletter-media">
+                <img src="${newsletter.imageUrl}" alt="Newsletter image" class="newsletter-image" />
+            </div>`;
+        }
+        
+        // Add video if present (support YouTube embeds)
+        if (newsletter.videoUrl) {
+            let videoEmbed = newsletter.videoUrl;
+            // Convert YouTube watch URLs to embed URLs
+            if (videoEmbed.includes('youtube.com/watch?v=')) {
+                const videoId = videoEmbed.split('v=')[1].split('&')[0];
+                videoEmbed = `https://www.youtube.com/embed/${videoId}`;
+                contentHTML += `<div class="newsletter-media">
+                    <iframe src="${videoEmbed}" class="newsletter-video" frameborder="0" allowfullscreen></iframe>
+                </div>`;
+            } else if (videoEmbed.includes('youtu.be/')) {
+                const videoId = videoEmbed.split('youtu.be/')[1].split('?')[0];
+                videoEmbed = `https://www.youtube.com/embed/${videoId}`;
+                contentHTML += `<div class="newsletter-media">
+                    <iframe src="${videoEmbed}" class="newsletter-video" frameborder="0" allowfullscreen></iframe>
+                </div>`;
+            } else {
+                contentHTML += `<div class="newsletter-media">
+                    <a href="${newsletter.videoUrl}" target="_blank" class="video-link">🎥 Watch Video</a>
+                </div>`;
+            }
+        }
+        
+        // Add text content
+        contentHTML += `<div class="newsletter-text">${this.escapeHtml(newsletter.content).replace(/\n/g, '<br>')}</div>`;
+        
+        modalContent.innerHTML = contentHTML;
         
         modal.classList.add('active');
         
@@ -458,14 +591,23 @@ Carmilla Wang, Society President`,
         document.body.style.overflow = '';
     }
 
-    deleteNewsletter(id) {
+    async deleteNewsletter(id) {
         if (!confirm('Are you sure you want to delete this newsletter? This action cannot be undone.')) {
             return;
         }
 
-        let newsletters = this.getNewsletters();
-        newsletters = newsletters.filter(newsletter => newsletter.id !== id);
-        localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+        try {
+            const response = await fetch(`http://localhost:3000/api/newsletters/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Failed to delete');
+        } catch (error) {
+            console.error('Failed to delete from server:', error);
+            // Fallback to localStorage if server is offline
+            let newsletters = await this.getNewsletters();
+            newsletters = newsletters.filter(newsletter => newsletter.id !== id);
+            localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+        }
         
         this.loadNewsletters();
         this.showNotification('Newsletter deleted successfully.', 'info');
@@ -662,6 +804,163 @@ Carmilla Wang, Society President`,
                 notification.remove();
             }
         }, 5000);
+    }
+    
+    // Event Management Functions
+    showEventForm() {
+        const form = document.getElementById('eventForm');
+        if (form) {
+            form.classList.add('active');
+        }
+    }
+    
+    hideEventForm() {
+        const form = document.getElementById('eventForm');
+        if (form) {
+            form.classList.remove('active');
+            const formElement = document.getElementById('eventFormElement');
+            if (formElement) {
+                formElement.reset();
+            }
+        }
+    }
+    
+    async handleEventSubmit(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const event = {
+            name: formData.get('name'),
+            date: formData.get('date'),
+            startTime: formData.get('startTime'),
+            endTime: formData.get('endTime'),
+            hosts: formData.get('hosts'),
+            description: formData.get('description'),
+            tags: formData.get('tags') || '',
+            location: formData.get('location') || '',
+            capacity: formData.get('capacity') || '',
+            formUrl: formData.get('formUrl') || ''
+        };
+        
+        try {
+            const response = await fetch('http://localhost:3000/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(event)
+            });
+            
+            if (!response.ok) throw new Error('Failed to create event');
+            
+            await response.json();
+            this.hideEventForm();
+            this.loadEvents();
+            this.showNotification('Event created successfully!', 'success');
+        } catch (error) {
+            console.error('Failed to create event:', error);
+            this.showNotification('Failed to create event. Please try again.', 'error');
+        }
+    }
+    
+    async loadEvents() {
+        try {
+            const response = await fetch('http://localhost:3000/api/events');
+            if (!response.ok) throw new Error('Failed to fetch events');
+            const events = await response.json();
+            this.displayEvents(events);
+        } catch (error) {
+            console.error('Failed to load events:', error);
+            // Display default events if server is offline
+            this.displayDefaultEvents();
+        }
+    }
+    
+    displayEvents(events) {
+        const container = document.getElementById('eventsGrid');
+        if (!container) return;
+        
+        // Keep existing static events and add dynamic ones
+        const staticEvents = container.innerHTML;
+        const dynamicEvents = events.map(event => this.createEventCardHTML(event)).join('');
+        
+        container.innerHTML = dynamicEvents + staticEvents;
+        
+        // Rebind event listeners for new cards
+        container.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (e.target.dataset.formUrl) {
+                    window.open(e.target.dataset.formUrl, '_blank');
+                } else {
+                    this.handleCompetitionApplication(e);
+                }
+            });
+        });
+        
+        container.querySelectorAll('.delete-event-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.deleteEvent(e.target.dataset.id));
+        });
+    }
+    
+    displayDefaultEvents() {
+        // Just keep the existing HTML events
+        const container = document.getElementById('eventsGrid');
+        if (!container) return;
+        // Events are already in HTML, no need to add anything
+    }
+    
+    createEventCardHTML(event) {
+        const date = new Date(event.date);
+        const formattedDate = date.toLocaleDateString('en-GB', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const hostsString = Array.isArray(event.hosts) ? event.hosts.join(', ') : event.hosts;
+        const tagsHTML = event.tags && event.tags.length > 0 
+            ? event.tags.map(tag => `<span class="detail">${this.escapeHtml(tag)}</span>`).join('')
+            : '';
+        
+        return `
+            <div class="competition-card current">
+                <div class="competition-status">User Created</div>
+                <h3>${this.escapeHtml(event.name)}</h3>
+                <p class="competition-date">${formattedDate} | ${event.startTime} - ${event.endTime}</p>
+                <p class="competition-desc">${this.escapeHtml(event.description)}</p>
+                <div class="event-meta">
+                    <p class="event-hosts"><strong>Hosted by:</strong> ${this.escapeHtml(hostsString)}</p>
+                    <p class="event-location"><strong>Location:</strong> ${this.escapeHtml(event.location)}</p>
+                    ${event.capacity ? `<p class="event-capacity"><strong>Capacity:</strong> ${event.capacity} participants</p>` : ''}
+                </div>
+                ${tagsHTML ? `<div class="competition-details">${tagsHTML}</div>` : ''}
+                <div class="event-actions">
+                    ${event.formUrl 
+                        ? `<button class="apply-btn" data-form-url="${event.formUrl}">Apply Now</button>`
+                        : `<button class="apply-btn" data-competition="${event.id}">Apply Now</button>`
+                    }
+                    <button class="delete-event-btn" data-id="${event.id}">Delete</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    async deleteEvent(id) {
+        if (!confirm('Are you sure you want to delete this event?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`http://localhost:3000/api/events/${id}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) throw new Error('Failed to delete event');
+            
+            this.loadEvents();
+            this.showNotification('Event deleted successfully.', 'info');
+        } catch (error) {
+            console.error('Failed to delete event:', error);
+            this.showNotification('Failed to delete event. Please try again.', 'error');
+        }
     }
 }
 
