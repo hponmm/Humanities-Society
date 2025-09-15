@@ -592,6 +592,16 @@ Carmilla Wang, Society President`,
     }
 
     async deleteNewsletter(id) {
+        const password = prompt('Please enter the admin password to delete this newsletter:');
+        if (!password) {
+            return;
+        }
+        
+        if (password !== 'humanitieslmcm') {
+            this.showNotification('Incorrect password. Deletion cancelled.', 'error');
+            return;
+        }
+        
         if (!confirm('Are you sure you want to delete this newsletter? This action cannot be undone.')) {
             return;
         }
@@ -944,6 +954,16 @@ Carmilla Wang, Society President`,
     }
     
     async deleteEvent(id) {
+        const password = prompt('Please enter the admin password to delete this event:');
+        if (!password) {
+            return;
+        }
+        
+        if (password !== 'humanitieslmcm') {
+            this.showNotification('Incorrect password. Deletion cancelled.', 'error');
+            return;
+        }
+        
         if (!confirm('Are you sure you want to delete this event?')) {
             return;
         }
