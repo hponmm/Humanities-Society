@@ -229,31 +229,39 @@ class HISHKHumanitiesSociety {
 
     async saveNewsletter(newsletter) {
         try {
-            const response = await fetch('http://localhost:3000/api/newsletters', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newsletter)
-            });
-            if (!response.ok) throw new Error('Failed to save');
-            return await response.json();
+            // Save to Firebase Firestore
+            await db.collection('newsletters').doc(newsletter.id).set(newsletter);
+            console.log('Newsletter saved to Firebase successfully');
+            return newsletter;
         } catch (error) {
-            console.error('Failed to save newsletter to server:', error);
-            // Fallback to localStorage if server is offline
+            console.error('Failed to save newsletter to Firebase:', error);
+            // Fallback to localStorage if Firebase is offline
             let newsletters = await this.getNewsletters();
             newsletters.unshift(newsletter);
             localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+            throw error;
         }
     }
 
     async getNewsletters() {
         try {
-            const response = await fetch('http://localhost:3000/api/newsletters');
-            if (!response.ok) throw new Error('Failed to fetch');
-            const newsletters = await response.json();
+            // Get newsletters from Firebase Firestore
+            const snapshot = await db.collection('newsletters')
+                .orderBy('timestamp', 'desc')
+                .get();
+            
+            const newsletters = [];
+            snapshot.forEach(doc => {
+                newsletters.push(doc.data());
+            });
+            
+            // If no newsletters in Firebase, return default ones
             return newsletters.length > 0 ? newsletters : this.getDefaultNewsletters();
         } catch (error) {
-            console.warn('Using default newsletters, server may be offline:', error);
-            return this.getDefaultNewsletters();
+            console.warn('Failed to fetch from Firebase, using defaults:', error);
+            // Try localStorage fallback
+            const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+            return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
         }
     }
 
@@ -607,13 +615,12 @@ Carmilla Wang, Society President`,
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/newsletters/${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error('Failed to delete');
+            // Delete from Firebase Firestore
+            await db.collection('newsletters').doc(id).delete();
+            console.log('Newsletter deleted from Firebase successfully');
         } catch (error) {
-            console.error('Failed to delete from server:', error);
-            // Fallback to localStorage if server is offline
+            console.error('Failed to delete from Firebase:', error);
+            // Fallback to localStorage if Firebase is offline
             let newsletters = await this.getNewsletters();
             newsletters = newsletters.filter(newsletter => newsletter.id !== id);
             localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
@@ -840,6 +847,7 @@ Carmilla Wang, Society President`,
         
         const formData = new FormData(e.target);
         const event = {
+            id: Date.now().toString(),
             name: formData.get('name'),
             date: formData.get('date'),
             startTime: formData.get('startTime'),
@@ -849,19 +857,15 @@ Carmilla Wang, Society President`,
             tags: formData.get('tags') || '',
             location: formData.get('location') || '',
             capacity: formData.get('capacity') || '',
-            formUrl: formData.get('formUrl') || ''
+            formUrl: formData.get('formUrl') || '',
+            timestamp: new Date().toISOString()
         };
         
         try {
-            const response = await fetch('http://localhost:3000/api/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(event)
-            });
+            // Save to Firebase Firestore
+            await db.collection('events').doc(event.id).set(event);
+            console.log('Event saved to Firebase successfully');
             
-            if (!response.ok) throw new Error('Failed to create event');
-            
-            await response.json();
             this.hideEventForm();
             this.loadEvents();
             this.showNotification('Event created successfully!', 'success');
@@ -873,13 +877,20 @@ Carmilla Wang, Society President`,
     
     async loadEvents() {
         try {
-            const response = await fetch('http://localhost:3000/api/events');
-            if (!response.ok) throw new Error('Failed to fetch events');
-            const events = await response.json();
+            // Get events from Firebase Firestore
+            const snapshot = await db.collection('events')
+                .orderBy('timestamp', 'desc')
+                .get();
+            
+            const events = [];
+            snapshot.forEach(doc => {
+                events.push(doc.data());
+            });
+            
             this.displayEvents(events);
         } catch (error) {
-            console.error('Failed to load events:', error);
-            // Display default events if server is offline
+            console.error('Failed to load events from Firebase:', error);
+            // Display default events if Firebase is offline
             this.displayDefaultEvents();
         }
     }
@@ -969,16 +980,14 @@ Carmilla Wang, Society President`,
         }
         
         try {
-            const response = await fetch(`http://localhost:3000/api/events/${id}`, {
-                method: 'DELETE'
-            });
-            
-            if (!response.ok) throw new Error('Failed to delete event');
+            // Delete from Firebase Firestore
+            await db.collection('events').doc(id).delete();
+            console.log('Event deleted from Firebase successfully');
             
             this.loadEvents();
             this.showNotification('Event deleted successfully.', 'info');
         } catch (error) {
-            console.error('Failed to delete event:', error);
+            console.error('Failed to delete event from Firebase:', error);
             this.showNotification('Failed to delete event. Please try again.', 'error');
         }
     }
