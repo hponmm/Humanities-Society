@@ -12,11 +12,30 @@ const firebaseConfig = {
   measurementId: "G-416SWGCC5Z"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Initialize Firestore
-const db = firebase.firestore();
-
-// Export for use in other files
-window.db = db;
+try {
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Initialize Firestore
+  const db = firebase.firestore();
+  
+  // Export for use in other files
+  window.db = db;
+  
+  // Test the connection
+  console.log('Firebase initialized successfully');
+  
+  // Enable offline persistence
+  db.enablePersistence()
+    .catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
+      } else if (err.code == 'unimplemented') {
+        console.warn('The current browser does not support offline persistence');
+      }
+    });
+    
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+  window.db = null;
+}

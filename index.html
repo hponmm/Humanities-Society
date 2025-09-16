@@ -51,12 +51,24 @@
                                 <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., Week of March 4-10, 2024">
                             </div>
                             <div class="form-group">
+                                <label for="newsletterAuthor">Author Name</label>
+                                <input type="text" id="newsletterAuthor" name="author" placeholder="e.g., John Smith (optional)">
+                            </div>
+                            <div class="form-group">
                                 <label for="newsletterDate">Publication Date</label>
                                 <input type="date" id="newsletterDate" name="date" required>
                             </div>
                             <div class="form-group">
                                 <label for="newsletterContent">Newsletter Content</label>
                                 <textarea id="newsletterContent" name="content" required placeholder="Write your newsletter content here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="newsletterImageUrl">Image URL (optional)</label>
+                                <input type="url" id="newsletterImageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="form-group">
+                                <label for="newsletterVideoUrl">Video URL (optional)</label>
+                                <input type="url" id="newsletterVideoUrl" name="videoUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-primary">Publish Newsletter</button>

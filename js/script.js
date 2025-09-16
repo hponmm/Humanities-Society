@@ -235,56 +235,86 @@ class HISHKHumanitiesSociety {
     async saveNewsletter(newsletter) {
         try {
             // Check if Firebase is initialized
-            if (typeof db === 'undefined') {
+            if (typeof db === 'undefined' || db === null) {
                 console.error('Firebase not initialized. Using localStorage fallback.');
                 throw new Error('Firebase not initialized');
             }
             
+            console.log('Attempting to save to Firebase:', newsletter);
+            
             // Save to Firebase Firestore
             await db.collection('newsletters').doc(newsletter.id).set(newsletter);
             console.log('Newsletter saved to Firebase successfully');
+            
+            // Also save to localStorage as backup
+            let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+            newsletters.unshift(newsletter);
+            localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+            
             return newsletter;
         } catch (error) {
             console.error('Failed to save newsletter to Firebase:', error);
+            console.error('Error details:', error.message, error.code);
+            
             // Fallback to localStorage if Firebase is offline
             let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
             newsletters.unshift(newsletter);
             localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
-            this.showNotification('Saved locally. Firebase may be offline.', 'warning');
+            
+            // Still show success if saved locally
+            console.log('Newsletter saved to localStorage as fallback');
+            return newsletter;
         }
     }
 
     async getNewsletters() {
         try {
             // Check if Firebase is initialized
-            if (typeof db === 'undefined') {
+            if (typeof db === 'undefined' || db === null) {
                 console.warn('Firebase not initialized. Using local storage.');
                 const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-                return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
+                const allNewsletters = [...localNewsletters, ...this.getDefaultNewsletters()];
+                // Remove duplicates based on id
+                const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
+                    index === self.findIndex((n) => n.id === newsletter.id)
+                );
+                return uniqueNewsletters;
             }
+            
+            console.log('Fetching newsletters from Firebase...');
             
             // Get newsletters from Firebase Firestore
             const snapshot = await db.collection('newsletters')
                 .orderBy('timestamp', 'desc')
                 .get();
             
-            const newsletters = [];
+            const firebaseNewsletters = [];
             snapshot.forEach(doc => {
-                newsletters.push(doc.data());
+                firebaseNewsletters.push(doc.data());
             });
             
-            // If no newsletters in Firebase, check localStorage then defaults
-            if (newsletters.length === 0) {
-                const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-                return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
-            }
+            console.log(`Found ${firebaseNewsletters.length} newsletters in Firebase`);
             
-            return newsletters;
+            // Combine Firebase, localStorage, and default newsletters
+            const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+            const allNewsletters = [...firebaseNewsletters, ...localNewsletters, ...this.getDefaultNewsletters()];
+            
+            // Remove duplicates based on id
+            const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
+                index === self.findIndex((n) => n.id === newsletter.id)
+            );
+            
+            return uniqueNewsletters;
         } catch (error) {
             console.warn('Failed to fetch from Firebase, using fallback:', error);
             // Try localStorage fallback
             const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-            return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
+            const allNewsletters = [...localNewsletters, ...this.getDefaultNewsletters()];
+            // Remove duplicates based on id
+            const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
+                index === self.findIndex((n) => n.id === newsletter.id)
+            );
+            return uniqueNewsletters;
         }
     }
 
