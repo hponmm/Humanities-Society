@@ -54,17 +54,17 @@ class HISHKHumanitiesSociety {
             newsletterFormElement.addEventListener('submit', (e) => this.handleNewsletterSubmit(e));
         }
         
-        // Author search functionality
-        const authorSearch = document.getElementById('authorSearch');
+        // Newsletter search functionality
+        const newsletterSearch = document.getElementById('newsletterSearch');
         const clearSearch = document.getElementById('clearSearch');
         
-        if (authorSearch) {
-            authorSearch.addEventListener('input', (e) => this.handleAuthorSearch(e.target.value));
+        if (newsletterSearch) {
+            newsletterSearch.addEventListener('input', (e) => this.handleNewsletterSearch(e.target.value));
         }
         
         if (clearSearch) {
             clearSearch.addEventListener('click', () => {
-                if (authorSearch) authorSearch.value = '';
+                if (newsletterSearch) newsletterSearch.value = '';
                 this.loadNewsletters();
             });
         }
@@ -452,23 +452,29 @@ Carmilla Wang, Society President`,
         ];
     }
 
-    async loadNewsletters(filterAuthor = '') {
+    async loadNewsletters(searchTerm = '') {
         let newsletters = await this.getNewsletters();
         const container = document.getElementById('newslettersArchive');
         
         if (!container) return;
 
-        // Filter by author if search term provided
-        if (filterAuthor) {
-            newsletters = newsletters.filter(n => 
-                (n.author || 'Anonymous').toLowerCase().includes(filterAuthor.toLowerCase())
-            );
+        // Filter by search term (author or content) if provided
+        if (searchTerm) {
+            const lowerSearchTerm = searchTerm.toLowerCase();
+            newsletters = newsletters.filter(n => {
+                const author = (n.author || 'Anonymous').toLowerCase();
+                const title = (n.title || '').toLowerCase();
+                const content = (n.content || '').toLowerCase();
+                return author.includes(lowerSearchTerm) || 
+                       title.includes(lowerSearchTerm) || 
+                       content.includes(lowerSearchTerm);
+            });
         }
 
         if (newsletters.length === 0) {
             container.innerHTML = `
                 <div class="no-newsletters">
-                    <p>${filterAuthor ? `No newsletters found by author "${filterAuthor}"` : 'No newsletters published yet. Click "Add New Newsletter" to create the first one!'}</p>
+                    <p>${searchTerm ? `No newsletters found matching "${searchTerm}"` : 'No newsletters published yet. Click "Add New Newsletter" to create the first one!'}</p>
                 </div>
             `;
             return;
@@ -545,7 +551,7 @@ Carmilla Wang, Society President`,
         `;
     }
     
-    handleAuthorSearch(searchTerm) {
+    handleNewsletterSearch(searchTerm) {
         this.loadNewsletters(searchTerm);
     }
 
@@ -880,14 +886,20 @@ Carmilla Wang, Society President`,
     showEventForm() {
         const form = document.getElementById('eventForm');
         if (form) {
-            form.classList.add('active');
+            form.style.display = 'block';
+            // Set today's date as default
+            const dateInput = document.getElementById('eventDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
         }
     }
     
     hideEventForm() {
         const form = document.getElementById('eventForm');
         if (form) {
-            form.classList.remove('active');
+            form.style.display = 'none';
             const formElement = document.getElementById('eventFormElement');
             if (formElement) {
                 formElement.reset();
@@ -899,6 +911,7 @@ Carmilla Wang, Society President`,
         e.preventDefault();
         
         const formData = new FormData(e.target);
+        const tagsString = formData.get('tags') || '';
         const event = {
             id: Date.now().toString(),
             name: formData.get('name'),
@@ -907,7 +920,7 @@ Carmilla Wang, Society President`,
             endTime: formData.get('endTime'),
             hosts: formData.get('hosts'),
             description: formData.get('description'),
-            tags: formData.get('tags') || '',
+            tags: tagsString ? tagsString.split(',').map(tag => tag.trim()) : [],
             location: formData.get('location') || '',
             capacity: formData.get('capacity') || '',
             formUrl: formData.get('formUrl') || '',
@@ -915,36 +928,84 @@ Carmilla Wang, Society President`,
         };
         
         try {
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined' || db === null) {
+                console.error('Firebase not initialized for events.');
+                // Save to localStorage as fallback
+                let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+                events.unshift(event);
+                localStorage.setItem('hishk_events', JSON.stringify(events));
+                
+                this.hideEventForm();
+                this.loadEvents();
+                this.showNotification('Event saved locally!', 'success');
+                return;
+            }
+            
             // Save to Firebase Firestore
             await db.collection('events').doc(event.id).set(event);
             console.log('Event saved to Firebase successfully');
+            
+            // Also save to localStorage as backup
+            let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+            events.unshift(event);
+            localStorage.setItem('hishk_events', JSON.stringify(events));
             
             this.hideEventForm();
             this.loadEvents();
             this.showNotification('Event created successfully!', 'success');
         } catch (error) {
             console.error('Failed to create event:', error);
-            this.showNotification('Failed to create event. Please try again.', 'error');
+            // Save to localStorage as fallback
+            let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+            events.unshift(event);
+            localStorage.setItem('hishk_events', JSON.stringify(events));
+            
+            this.hideEventForm();
+            this.loadEvents();
+            this.showNotification('Event saved locally!', 'success');
         }
     }
     
     async loadEvents() {
         try {
-            // Get events from Firebase Firestore
-            const snapshot = await db.collection('events')
-                .orderBy('timestamp', 'desc')
-                .get();
+            let events = [];
             
-            const events = [];
-            snapshot.forEach(doc => {
-                events.push(doc.data());
-            });
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined' || db === null) {
+                console.warn('Firebase not initialized for events.');
+                // Try to load from localStorage
+                events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+            } else {
+                console.log('Fetching events from Firebase...');
+                
+                // Get events from Firebase Firestore
+                const snapshot = await db.collection('events')
+                    .orderBy('timestamp', 'desc')
+                    .get();
+                
+                snapshot.forEach(doc => {
+                    events.push(doc.data());
+                });
+                
+                console.log(`Found ${events.length} events in Firebase`);
+                
+                // Also get local events
+                const localEvents = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+                
+                // Merge and deduplicate
+                const allEvents = [...events, ...localEvents];
+                events = allEvents.filter((event, index, self) =>
+                    index === self.findIndex((e) => e.id === event.id)
+                );
+            }
             
             this.displayEvents(events);
         } catch (error) {
             console.error('Failed to load events from Firebase:', error);
-            // Display default events if Firebase is offline
-            this.displayDefaultEvents();
+            // Try localStorage fallback
+            const localEvents = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+            this.displayEvents(localEvents);
         }
     }
     
@@ -952,11 +1013,13 @@ Carmilla Wang, Society President`,
         const container = document.getElementById('eventsGrid');
         if (!container) return;
         
-        // Keep existing static events and add dynamic ones
-        const staticEvents = container.innerHTML;
+        // Create dynamic events HTML
         const dynamicEvents = events.map(event => this.createEventCardHTML(event)).join('');
         
-        container.innerHTML = dynamicEvents + staticEvents;
+        // Add default static events HTML
+        const staticEventsHTML = this.getStaticEventsHTML();
+        
+        container.innerHTML = dynamicEvents + staticEventsHTML;
         
         // Rebind event listeners for new cards
         container.querySelectorAll('.apply-btn').forEach(btn => {
@@ -975,10 +1038,53 @@ Carmilla Wang, Society President`,
     }
     
     displayDefaultEvents() {
-        // Just keep the existing HTML events
         const container = document.getElementById('eventsGrid');
         if (!container) return;
-        // Events are already in HTML, no need to add anything
+        
+        container.innerHTML = this.getStaticEventsHTML();
+    }
+    
+    getStaticEventsHTML() {
+        return `
+            <div class="competition-card upcoming">
+                <div class="competition-status">Upcoming</div>
+                <h3>HISHK History Bowl Championship</h3>
+                <p class="competition-date">March 15, 2024</p>
+                <p class="competition-desc">Test your knowledge of world history in our annual quiz bowl competition. Teams of 4 compete in multiple rounds covering ancient to modern history.</p>
+                <div class="competition-details">
+                    <span class="detail">Team Event</span>
+                    <span class="detail">Years 10-13</span>
+                    <span class="detail">Prize Pool: $500</span>
+                </div>
+                <button class="apply-btn" data-competition="history-bowl">Apply Now</button>
+            </div>
+            
+            <div class="competition-card upcoming">
+                <div class="competition-status">Upcoming</div>
+                <h3>Political Philosophy Debate Tournament</h3>
+                <p class="competition-date">March 22, 2024</p>
+                <p class="competition-desc">Engage in structured debates on contemporary political issues and philosophical questions. Individual or pair registration available.</p>
+                <div class="competition-details">
+                    <span class="detail">Individual/Pairs</span>
+                    <span class="detail">Years 11-13</span>
+                    <span class="detail">Oxford Format</span>
+                </div>
+                <button class="apply-btn" data-competition="philosophy-debate">Apply Now</button>
+            </div>
+            
+            <div class="competition-card upcoming">
+                <div class="competition-status">Applications Open</div>
+                <h3>HISHK Mini Model United Nations</h3>
+                <p class="competition-date">April 5-6, 2024</p>
+                <p class="competition-desc">Join our two-day MUN conference featuring committees on current global issues. Perfect for beginners and experienced delegates alike.</p>
+                <div class="competition-details">
+                    <span class="detail">Individual</span>
+                    <span class="detail">Years 9-13</span>
+                    <span class="detail">6 Committees</span>
+                </div>
+                <button class="apply-btn" data-competition="mini-mun">Apply Now</button>
+            </div>
+        `;
     }
     
     createEventCardHTML(event) {
