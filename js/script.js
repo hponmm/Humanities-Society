@@ -319,137 +319,8 @@ class HISHKHumanitiesSociety {
     }
 
     getDefaultNewsletters() {
-        return [
-            {
-                id: '1',
-                title: 'Historical Perspectives on Democracy',
-                date: '2024-03-08',
-                author: 'The Editorial Committee',
-                content: `Dear HISHK Humanities Society Members,
-
-This week, we delve deep into the fascinating evolution of democratic ideals, tracing their journey from the ancient agora of Athens to the modern parliamentary chambers of today.
-
-DEMOCRACY THROUGH THE AGES
-
-Ancient Athens gave us the foundational concept of democracy - "rule by the people." However, their version was quite different from our modern understanding. Only free male citizens could participate, excluding women, slaves, and foreigners. This limited participation raises important questions about inclusivity that remain relevant today.
-
-The Roman Republic introduced representative elements that would later influence modern democratic systems. Their concept of checks and balances, with consuls, senate, and popular assemblies, provided a framework that inspired the American founding fathers centuries later.
-
-MEDIEVAL AND RENAISSANCE DEVELOPMENTS
-
-During the medieval period, democratic ideals seemed to fade, replaced by feudalism and absolute monarchy. However, institutions like the English Parliament (established in 1066) began to limit royal power, creating precedents for constitutional government.
-
-The Renaissance brought renewed interest in classical texts and democratic theory. Thinkers like Machiavelli examined the nature of political power, while others explored concepts of natural rights and social contracts.
-
-MODERN DEMOCRATIC EVOLUTION
-
-The Enlightenment marked a turning point. John Locke's theories on government by consent, Montesquieu's separation of powers, and Rousseau's social contract theory laid intellectual groundwork for modern democracy.
-
-The American and French Revolutions put these theories into practice, though with mixed results. The American system balanced federal and state powers, while the French Revolution showed both the promise and perils of rapid democratic change.
-
-CONTEMPORARY CHALLENGES
-
-Today, democracy faces new challenges: social media's impact on public discourse, the rise of populism, and questions about direct versus representative democracy. Understanding historical precedents helps us navigate these modern dilemmas.
-
-Our next seminar will explore these themes further. Join us Monday, March 11th, at 4:00 PM in Conference Room A.
-
-Best regards,
-The Editorial Committee`,
-                timestamp: '2024-03-08T10:00:00Z'
-            },
-            {
-                id: '2',
-                title: 'Cultural Exchange in the Silk Road Era',
-                date: '2024-03-01',
-                author: 'Michelle Ko',
-                content: `Dear Members,
-
-The Silk Road was far more than a trade route - it was history's greatest cultural exchange network, connecting civilizations and shaping the world as we know it.
-
-THE NETWORK OF NETWORKS
-
-Spanning over 4,000 miles from China to the Mediterranean, the Silk Road wasn't a single road but a complex network of trade routes. Merchants, pilgrims, diplomats, and scholars traveled these paths, carrying not just goods but ideas, technologies, and beliefs.
-
-ECONOMIC FOUNDATIONS
-
-While silk gave the route its name, the trade was incredibly diverse. From China came silk, tea, and porcelain. Central Asia contributed horses and jade. The Middle East offered spices and precious metals. This economic foundation made possible the cultural exchange that followed.
-
-TECHNOLOGICAL TRANSFER
-
-Perhaps the most significant aspect was technological diffusion. Paper-making spread from China to the Islamic world and eventually to Europe. The magnetic compass revolutionized navigation. Mathematical concepts, including the numeral system we use today, traveled along these routes.
-
-RELIGIOUS AND PHILOSOPHICAL EXCHANGE
-
-Buddhism spread along the Silk Road from India to China, adapting to local cultures along the way. Islamic scholarship preserved and transmitted Greek philosophical works. Christian communities established themselves in Central Asia, creating unique cultural syntheses.
-
-ARTISTIC FUSION
-
-The artistic legacy is remarkable. Gandhara sculptures show Greek influence on Buddhist art. Persian miniatures reflect Chinese techniques. Musical instruments traveled across continents, creating new forms of cultural expression.
-
-LINGUISTIC IMPACT
-
-Languages borrowed extensively from each other. Chinese adopted Sanskrit terms for Buddhist concepts. Persian vocabulary entered numerous languages. This linguistic exchange enriched human communication across cultures.
-
-LESSONS FOR TODAY
-
-The Silk Road demonstrates that globalization isn't new - cultural exchange has always driven human progress. However, it also shows that successful exchange requires mutual respect and understanding, something we must remember in our interconnected world.
-
-Our upcoming field trip to the Hong Kong Museum of History will explore these themes through their Silk Road exhibition. Sign up by March 5th!
-
-Academically yours,
-Michelle Ko, Newsletter Editor`,
-                timestamp: '2024-03-01T10:00:00Z'
-            },
-            {
-                id: '3',
-                title: 'Modern Political Movements in Asia',
-                date: '2024-02-23',
-                author: 'Carmilla Wang',
-                content: `Dear Humanities Society,
-
-Asia's political landscape has undergone remarkable transformation in recent decades. Understanding these changes provides crucial insight into contemporary global politics.
-
-DEMOCRATIC TRANSITIONS
-
-South Korea's transition from military dictatorship to vibrant democracy exemplifies successful democratization. The 1987 pro-democracy movements, led largely by students and civil society, created foundations for today's robust democratic institutions.
-
-Taiwan's democratization followed a similar pattern, with the lifting of martial law in 1987 marking the beginning of political liberalization. The Sunflower Student Movement of 2014 showed how younger generations continue to shape democratic discourse.
-
-CHALLENGES TO DEMOCRACY
-
-However, democratic backsliding concerns many observers. Thailand's cycle of coups and constitutional crises illustrates how fragile democratic institutions can be. Military interventions in 2006 and 2014 disrupted democratic processes, leading to ongoing political polarization.
-
-Myanmar's return to military rule in 2021 represents one of the most dramatic reversals, undoing a decade of democratic progress and highlighting the persistent influence of military institutions in politics.
-
-YOUTH MOVEMENTS
-
-Young people have been at the forefront of political change across Asia. Hong Kong's Umbrella Movement and more recent protests demonstrated how students can mobilize for political reform. Similar youth-led movements in Thailand and Myanmar show this pattern extending across the region.
-
-These movements often use social media and innovative protest tactics, adapting traditional forms of political action to digital age realities.
-
-ECONOMIC AND POLITICAL DEVELOPMENT
-
-The relationship between economic growth and political development remains complex. While South Korea and Taiwan democratized alongside economic development, China's economic success hasn't led to similar political liberalization.
-
-Singapore's model of economic success with limited political competition offers another variant, challenging simple relationships between prosperity and democracy.
-
-REGIONAL ORGANIZATIONS
-
-ASEAN's role in regional politics reflects tensions between sovereignty and cooperation. The organization's non-interference principle sometimes conflicts with democratic values, as seen in responses to Myanmar's coup.
-
-IMPLICATIONS FOR GLOBAL POLITICS
-
-Asia's political developments have global significance. The region's economic importance means political stability here affects worldwide prosperity. Democratic movements inspire similar efforts globally, while authoritarian responses provide cautionary examples.
-
-Understanding these dynamics helps us analyze not just Asian politics, but broader patterns of political change in our interconnected world.
-
-Next week, we'll host Dr. Sarah Kim from HKU for a lecture on "Youth Politics in Contemporary Asia." Tuesday, February 27th, 3:30 PM in the Main Auditorium.
-
-Analytically yours,
-Carmilla Wang, Society President`,
-                timestamp: '2024-02-23T10:00:00Z'
-            }
-        ];
+        // Return empty array - no default newsletters
+        return [];
     }
 
     async loadNewsletters(searchTerm = '') {
@@ -674,16 +545,20 @@ Carmilla Wang, Society President`,
         }
 
         try {
-            // Delete from Firebase Firestore
-            await db.collection('newsletters').doc(id).delete();
-            console.log('Newsletter deleted from Firebase successfully');
+            // Check if Firebase is initialized
+            if (typeof db !== 'undefined' && db !== null) {
+                // Delete from Firebase Firestore
+                await db.collection('newsletters').doc(id).delete();
+                console.log('Newsletter deleted from Firebase successfully');
+            }
         } catch (error) {
             console.error('Failed to delete from Firebase:', error);
-            // Fallback to localStorage if Firebase is offline
-            let newsletters = await this.getNewsletters();
-            newsletters = newsletters.filter(newsletter => newsletter.id !== id);
-            localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
         }
+        
+        // Also delete from localStorage
+        let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+        newsletters = newsletters.filter(newsletter => newsletter.id !== id);
+        localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
         
         this.loadNewsletters();
         this.showNotification('Newsletter deleted successfully.', 'info');
@@ -1045,46 +920,8 @@ Carmilla Wang, Society President`,
     }
     
     getStaticEventsHTML() {
-        return `
-            <div class="competition-card upcoming">
-                <div class="competition-status">Upcoming</div>
-                <h3>HISHK History Bowl Championship</h3>
-                <p class="competition-date">March 15, 2024</p>
-                <p class="competition-desc">Test your knowledge of world history in our annual quiz bowl competition. Teams of 4 compete in multiple rounds covering ancient to modern history.</p>
-                <div class="competition-details">
-                    <span class="detail">Team Event</span>
-                    <span class="detail">Years 10-13</span>
-                    <span class="detail">Prize Pool: $500</span>
-                </div>
-                <button class="apply-btn" data-competition="history-bowl">Apply Now</button>
-            </div>
-            
-            <div class="competition-card upcoming">
-                <div class="competition-status">Upcoming</div>
-                <h3>Political Philosophy Debate Tournament</h3>
-                <p class="competition-date">March 22, 2024</p>
-                <p class="competition-desc">Engage in structured debates on contemporary political issues and philosophical questions. Individual or pair registration available.</p>
-                <div class="competition-details">
-                    <span class="detail">Individual/Pairs</span>
-                    <span class="detail">Years 11-13</span>
-                    <span class="detail">Oxford Format</span>
-                </div>
-                <button class="apply-btn" data-competition="philosophy-debate">Apply Now</button>
-            </div>
-            
-            <div class="competition-card upcoming">
-                <div class="competition-status">Applications Open</div>
-                <h3>HISHK Mini Model United Nations</h3>
-                <p class="competition-date">April 5-6, 2024</p>
-                <p class="competition-desc">Join our two-day MUN conference featuring committees on current global issues. Perfect for beginners and experienced delegates alike.</p>
-                <div class="competition-details">
-                    <span class="detail">Individual</span>
-                    <span class="detail">Years 9-13</span>
-                    <span class="detail">6 Committees</span>
-                </div>
-                <button class="apply-btn" data-competition="mini-mun">Apply Now</button>
-            </div>
-        `;
+        // Return empty string - no default events
+        return '';
     }
     
     createEventCardHTML(event) {
@@ -1139,16 +976,23 @@ Carmilla Wang, Society President`,
         }
         
         try {
-            // Delete from Firebase Firestore
-            await db.collection('events').doc(id).delete();
-            console.log('Event deleted from Firebase successfully');
-            
-            this.loadEvents();
-            this.showNotification('Event deleted successfully.', 'info');
+            // Check if Firebase is initialized
+            if (typeof db !== 'undefined' && db !== null) {
+                // Delete from Firebase Firestore
+                await db.collection('events').doc(id).delete();
+                console.log('Event deleted from Firebase successfully');
+            }
         } catch (error) {
             console.error('Failed to delete event from Firebase:', error);
-            this.showNotification('Failed to delete event. Please try again.', 'error');
         }
+        
+        // Also delete from localStorage
+        let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+        events = events.filter(event => event.id !== id);
+        localStorage.setItem('hishk_events', JSON.stringify(events));
+        
+        this.loadEvents();
+        this.showNotification('Event deleted successfully.', 'info');
     }
 }
 
