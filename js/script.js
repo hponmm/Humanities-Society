@@ -204,7 +204,7 @@ class HISHKHumanitiesSociety {
         const newsletter = {
             id: Date.now().toString(),
             title: formData.get('title'),
-            author: formData.get('author') || '',
+            author: formData.get('author') || 'Anonymous',
             date: formData.get('date'),
             content: formData.get('content'),
             imageUrl: formData.get('imageUrl') || '',
@@ -221,14 +221,25 @@ class HISHKHumanitiesSociety {
             return;
         }
 
-        await this.saveNewsletter(newsletter);
-        this.hideNewsletterForm();
-        this.loadNewsletters();
-        this.showNotification('Newsletter published successfully!', 'success');
+        try {
+            await this.saveNewsletter(newsletter);
+            this.hideNewsletterForm();
+            this.loadNewsletters();
+            this.showNotification('Newsletter published successfully!', 'success');
+        } catch (error) {
+            console.error('Error publishing newsletter:', error);
+            this.showNotification('Failed to publish newsletter. Check console for details.', 'error');
+        }
     }
 
     async saveNewsletter(newsletter) {
         try {
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined') {
+                console.error('Firebase not initialized. Using localStorage fallback.');
+                throw new Error('Firebase not initialized');
+            }
+            
             // Save to Firebase Firestore
             await db.collection('newsletters').doc(newsletter.id).set(newsletter);
             console.log('Newsletter saved to Firebase successfully');
@@ -236,15 +247,22 @@ class HISHKHumanitiesSociety {
         } catch (error) {
             console.error('Failed to save newsletter to Firebase:', error);
             // Fallback to localStorage if Firebase is offline
-            let newsletters = await this.getNewsletters();
+            let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
             newsletters.unshift(newsletter);
             localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
-            throw error;
+            this.showNotification('Saved locally. Firebase may be offline.', 'warning');
         }
     }
 
     async getNewsletters() {
         try {
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined') {
+                console.warn('Firebase not initialized. Using local storage.');
+                const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+                return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
+            }
+            
             // Get newsletters from Firebase Firestore
             const snapshot = await db.collection('newsletters')
                 .orderBy('timestamp', 'desc')
@@ -255,10 +273,15 @@ class HISHKHumanitiesSociety {
                 newsletters.push(doc.data());
             });
             
-            // If no newsletters in Firebase, return default ones
-            return newsletters.length > 0 ? newsletters : this.getDefaultNewsletters();
+            // If no newsletters in Firebase, check localStorage then defaults
+            if (newsletters.length === 0) {
+                const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+                return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
+            }
+            
+            return newsletters;
         } catch (error) {
-            console.warn('Failed to fetch from Firebase, using defaults:', error);
+            console.warn('Failed to fetch from Firebase, using fallback:', error);
             // Try localStorage fallback
             const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
             return localNewsletters.length > 0 ? localNewsletters : this.getDefaultNewsletters();
