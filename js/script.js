@@ -6,11 +6,103 @@ class HISHKHumanitiesSociety {
         this.init();
         this.loadNewsletters();
         this.loadEvents();
+        this.initializeDataSync();
     }
 
     init() {
         this.bindEvents();
         this.initializeMobileMenu();
+    }
+
+    initializeDataSync() {
+        // Check for pending local data and sync to Firebase when online
+        this.syncLocalDataToFirebase();
+        
+        // Set up periodic sync (every 30 seconds)
+        setInterval(() => {
+            this.syncLocalDataToFirebase();
+        }, 30000);
+        
+        // Sync when coming back online
+        window.addEventListener('online', () => {
+            console.log('Connection restored. Syncing data...');
+            this.syncLocalDataToFirebase();
+            this.showNotification('Connection restored. Syncing data...', 'info');
+        });
+        
+        // Notify when going offline
+        window.addEventListener('offline', () => {
+            console.log('Connection lost. Data will be saved locally.');
+            this.showNotification('Working offline. Changes will sync when reconnected.', 'info');
+        });
+    }
+
+    async syncLocalDataToFirebase() {
+        if (typeof db === 'undefined' || db === null) {
+            return; // Firebase not available
+        }
+        
+        try {
+            // Sync newsletters
+            const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+            if (localNewsletters.length > 0) {
+                console.log(`Syncing ${localNewsletters.length} local newsletters to Firebase...`);
+                for (const newsletter of localNewsletters) {
+                    try {
+                        await db.collection('newsletters').doc(newsletter.id).set(newsletter);
+                        console.log(`Synced newsletter ${newsletter.id}`);
+                    } catch (err) {
+                        console.error(`Failed to sync newsletter ${newsletter.id}:`, err);
+                    }
+                }
+                // Clear local storage after successful sync
+                localStorage.removeItem('hishk_newsletters');
+                this.loadNewsletters();
+            }
+            
+            // Sync events
+            const localEvents = JSON.parse(localStorage.getItem('hishk_events') || '[]');
+            if (localEvents.length > 0) {
+                console.log(`Syncing ${localEvents.length} local events to Firebase...`);
+                for (const event of localEvents) {
+                    try {
+                        await db.collection('events').doc(event.id).set(event);
+                        console.log(`Synced event ${event.id}`);
+                    } catch (err) {
+                        console.error(`Failed to sync event ${event.id}:`, err);
+                    }
+                }
+                // Clear local storage after successful sync
+                localStorage.removeItem('hishk_events');
+                this.loadEvents();
+            }
+            
+            // Sync comments
+            const localComments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+            if (localComments.length > 0) {
+                console.log(`Syncing ${localComments.length} local comments to Firebase...`);
+                for (const comment of localComments) {
+                    try {
+                        await db.collection('comments').doc(comment.id).set(comment);
+                        console.log(`Synced comment ${comment.id}`);
+                    } catch (err) {
+                        console.error(`Failed to sync comment ${comment.id}:`, err);
+                    }
+                }
+                // Clear local storage after successful sync
+                localStorage.removeItem('hishk_comments');
+                // Reload comments if modal is open
+                if (this.currentNewsletterId) {
+                    this.loadComments(this.currentNewsletterId);
+                }
+            }
+            
+            if (localNewsletters.length > 0 || localEvents.length > 0 || localComments.length > 0) {
+                this.showNotification('Data synced successfully!', 'success');
+            }
+        } catch (error) {
+            console.error('Error during data sync:', error);
+        }
     }
 
     bindEvents() {
@@ -38,7 +130,6 @@ class HISHKHumanitiesSociety {
 
         // Newsletter form
         const addNewsletterBtn = document.getElementById('addNewsletterBtn');
-        const newsletterForm = document.getElementById('newsletterForm');
         const cancelNewsletterBtn = document.getElementById('cancelNewsletterBtn');
         const newsletterFormElement = document.getElementById('newsletterFormElement');
 
@@ -71,7 +162,6 @@ class HISHKHumanitiesSociety {
         
         // Event form
         const addEventBtn = document.getElementById('addEventBtn');
-        const eventForm = document.getElementById('eventForm');
         const cancelEventBtn = document.getElementById('cancelEventBtn');
         const eventFormElement = document.getElementById('eventFormElement');
         
@@ -236,33 +326,36 @@ class HISHKHumanitiesSociety {
         try {
             // Check if Firebase is initialized
             if (typeof db === 'undefined' || db === null) {
-                console.error('Firebase not initialized. Using localStorage fallback.');
-                throw new Error('Firebase not initialized');
+                console.error('Firebase not initialized. Saving to localStorage only.');
+                // Save only to localStorage when Firebase unavailable
+                let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+                newsletters.unshift(newsletter);
+                localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+                return newsletter;
             }
             
             console.log('Attempting to save to Firebase:', newsletter);
             
-            // Save to Firebase Firestore
+            // Save to Firebase Firestore (primary storage)
             await db.collection('newsletters').doc(newsletter.id).set(newsletter);
             console.log('Newsletter saved to Firebase successfully');
             
-            // Also save to localStorage as backup
-            let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-            newsletters.unshift(newsletter);
-            localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+            // Clear localStorage after successful Firebase save to prevent conflicts
+            // Only keep as emergency backup
+            localStorage.removeItem('hishk_newsletters');
             
             return newsletter;
         } catch (error) {
             console.error('Failed to save newsletter to Firebase:', error);
             console.error('Error details:', error.message, error.code);
             
-            // Fallback to localStorage if Firebase is offline
+            // Fallback to localStorage only if Firebase fails
             let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
             newsletters.unshift(newsletter);
             localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
             
-            // Still show success if saved locally
             console.log('Newsletter saved to localStorage as fallback');
+            this.showNotification('Saved locally. Will sync when connection restored.', 'info');
             return newsletter;
         }
     }
@@ -271,19 +364,14 @@ class HISHKHumanitiesSociety {
         try {
             // Check if Firebase is initialized
             if (typeof db === 'undefined' || db === null) {
-                console.warn('Firebase not initialized. Using local storage.');
+                console.warn('Firebase not initialized. Using local storage only.');
                 const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-                const allNewsletters = [...localNewsletters, ...this.getDefaultNewsletters()];
-                // Remove duplicates based on id
-                const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
-                    index === self.findIndex((n) => n.id === newsletter.id)
-                );
-                return uniqueNewsletters;
+                return localNewsletters;
             }
             
             console.log('Fetching newsletters from Firebase...');
             
-            // Get newsletters from Firebase Firestore
+            // Get newsletters from Firebase Firestore (primary source)
             const snapshot = await db.collection('newsletters')
                 .orderBy('timestamp', 'desc')
                 .get();
@@ -295,26 +383,15 @@ class HISHKHumanitiesSociety {
             
             console.log(`Found ${firebaseNewsletters.length} newsletters in Firebase`);
             
-            // Combine Firebase, localStorage, and default newsletters
-            const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-            const allNewsletters = [...firebaseNewsletters, ...localNewsletters, ...this.getDefaultNewsletters()];
+            // Return only Firebase newsletters when online
+            // This prevents conflicts between devices
+            return firebaseNewsletters;
             
-            // Remove duplicates based on id
-            const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
-                index === self.findIndex((n) => n.id === newsletter.id)
-            );
-            
-            return uniqueNewsletters;
         } catch (error) {
-            console.warn('Failed to fetch from Firebase, using fallback:', error);
-            // Try localStorage fallback
+            console.warn('Failed to fetch from Firebase, using localStorage fallback:', error);
+            // Only use localStorage when Firebase is unavailable
             const localNewsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
-            const allNewsletters = [...localNewsletters, ...this.getDefaultNewsletters()];
-            // Remove duplicates based on id
-            const uniqueNewsletters = allNewsletters.filter((newsletter, index, self) =>
-                index === self.findIndex((n) => n.id === newsletter.id)
-            );
-            return uniqueNewsletters;
+            return localNewsletters;
         }
     }
 
@@ -464,6 +541,9 @@ class HISHKHumanitiesSociety {
         
         if (!modal || !modalTitle || !modalDate || !modalContent) return;
         
+        // Store current newsletter ID for comments
+        this.currentNewsletterId = newsletterId;
+        
         const date = new Date(newsletter.date);
         const formattedDate = date.toLocaleDateString('en-GB', {
             year: 'numeric',
@@ -511,6 +591,12 @@ class HISHKHumanitiesSociety {
         contentHTML += `<div class="newsletter-text">${this.escapeHtml(newsletter.content).replace(/\n/g, '<br>')}</div>`;
         
         modalContent.innerHTML = contentHTML;
+        
+        // Load comments for this newsletter
+        this.loadComments(newsletterId);
+        
+        // Bind comment form event
+        this.bindCommentFormEvents();
         
         modal.classList.add('active');
         
@@ -806,7 +892,7 @@ class HISHKHumanitiesSociety {
             // Check if Firebase is initialized
             if (typeof db === 'undefined' || db === null) {
                 console.error('Firebase not initialized for events.');
-                // Save to localStorage as fallback
+                // Save to localStorage only when Firebase unavailable
                 let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
                 events.unshift(event);
                 localStorage.setItem('hishk_events', JSON.stringify(events));
@@ -817,28 +903,26 @@ class HISHKHumanitiesSociety {
                 return;
             }
             
-            // Save to Firebase Firestore
+            // Save to Firebase Firestore (primary storage)
             await db.collection('events').doc(event.id).set(event);
             console.log('Event saved to Firebase successfully');
             
-            // Also save to localStorage as backup
-            let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
-            events.unshift(event);
-            localStorage.setItem('hishk_events', JSON.stringify(events));
+            // Clear localStorage after successful Firebase save to prevent conflicts
+            localStorage.removeItem('hishk_events');
             
             this.hideEventForm();
             this.loadEvents();
             this.showNotification('Event created successfully!', 'success');
         } catch (error) {
             console.error('Failed to create event:', error);
-            // Save to localStorage as fallback
+            // Save to localStorage only as fallback
             let events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
             events.unshift(event);
             localStorage.setItem('hishk_events', JSON.stringify(events));
             
             this.hideEventForm();
             this.loadEvents();
-            this.showNotification('Event saved locally!', 'success');
+            this.showNotification('Event saved locally. Will sync when online.', 'info');
         }
     }
     
@@ -849,12 +933,12 @@ class HISHKHumanitiesSociety {
             // Check if Firebase is initialized
             if (typeof db === 'undefined' || db === null) {
                 console.warn('Firebase not initialized for events.');
-                // Try to load from localStorage
+                // Load from localStorage only when Firebase unavailable
                 events = JSON.parse(localStorage.getItem('hishk_events') || '[]');
             } else {
                 console.log('Fetching events from Firebase...');
                 
-                // Get events from Firebase Firestore
+                // Get events from Firebase Firestore (primary source)
                 const snapshot = await db.collection('events')
                     .orderBy('timestamp', 'desc')
                     .get();
@@ -865,20 +949,14 @@ class HISHKHumanitiesSociety {
                 
                 console.log(`Found ${events.length} events in Firebase`);
                 
-                // Also get local events
-                const localEvents = JSON.parse(localStorage.getItem('hishk_events') || '[]');
-                
-                // Merge and deduplicate
-                const allEvents = [...events, ...localEvents];
-                events = allEvents.filter((event, index, self) =>
-                    index === self.findIndex((e) => e.id === event.id)
-                );
+                // Use only Firebase data when online to prevent conflicts
+                // Do not merge with localStorage
             }
             
             this.displayEvents(events);
         } catch (error) {
             console.error('Failed to load events from Firebase:', error);
-            // Try localStorage fallback
+            // Use localStorage only as fallback when Firebase fails
             const localEvents = JSON.parse(localStorage.getItem('hishk_events') || '[]');
             this.displayEvents(localEvents);
         }
@@ -993,6 +1071,208 @@ class HISHKHumanitiesSociety {
         
         this.loadEvents();
         this.showNotification('Event deleted successfully.', 'info');
+    }
+
+    // Comment functionality methods
+    bindCommentFormEvents() {
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm) {
+            // Remove existing listener to avoid duplicates
+            commentForm.replaceWith(commentForm.cloneNode(true));
+            const newForm = document.getElementById('commentForm');
+            newForm.addEventListener('submit', (e) => this.handleCommentSubmit(e));
+        }
+    }
+
+    async handleCommentSubmit(e) {
+        e.preventDefault();
+        
+        if (!this.currentNewsletterId) return;
+        
+        const authorInput = document.getElementById('commentAuthor');
+        const contentInput = document.getElementById('commentContent');
+        
+        if (!contentInput || !contentInput.value.trim()) {
+            this.showNotification('Please write a comment before submitting.', 'error');
+            return;
+        }
+        
+        const comment = {
+            id: Date.now().toString(),
+            newsletterId: this.currentNewsletterId,
+            author: authorInput.value.trim() || 'Anonymous',
+            content: contentInput.value.trim(),
+            date: new Date().toISOString()
+        };
+        
+        try {
+            await this.saveComment(comment);
+            
+            // Clear form
+            authorInput.value = '';
+            contentInput.value = '';
+            
+            // Reload comments
+            this.loadComments(this.currentNewsletterId);
+            
+            this.showNotification('Comment posted successfully!', 'success');
+        } catch (error) {
+            console.error('Error posting comment:', error);
+            this.showNotification('Failed to post comment. Please try again.', 'error');
+        }
+    }
+
+    async saveComment(comment) {
+        try {
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined' || db === null) {
+                console.warn('Firebase not initialized. Saving comment to localStorage only.');
+                // Save only to localStorage when Firebase unavailable
+                let comments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+                comments.push(comment);
+                localStorage.setItem('hishk_comments', JSON.stringify(comments));
+                return comment;
+            }
+            
+            // Save to Firebase Firestore (primary storage)
+            await db.collection('comments').doc(comment.id).set(comment);
+            console.log('Comment saved to Firebase successfully');
+            
+            // Clear localStorage comments after successful Firebase save
+            // This prevents duplicate/conflicting data between devices
+            localStorage.removeItem('hishk_comments');
+            
+            return comment;
+        } catch (error) {
+            console.error('Failed to save comment to Firebase:', error);
+            
+            // Fallback to localStorage only if Firebase fails
+            let comments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+            comments.push(comment);
+            localStorage.setItem('hishk_comments', JSON.stringify(comments));
+            
+            console.log('Comment saved to localStorage as fallback');
+            this.showNotification('Comment saved locally. Will sync when online.', 'info');
+            return comment;
+        }
+    }
+
+    async getComments(newsletterId) {
+        try {
+            // Check if Firebase is initialized
+            if (typeof db === 'undefined' || db === null) {
+                console.warn('Firebase not initialized. Using localStorage for comments.');
+                const localComments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+                return localComments
+                    .filter(c => c.newsletterId === newsletterId)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            
+            // Get comments from Firebase Firestore (primary source)
+            const snapshot = await db.collection('comments')
+                .where('newsletterId', '==', newsletterId)
+                .orderBy('date', 'desc')
+                .get();
+            
+            const firebaseComments = [];
+            snapshot.forEach(doc => {
+                firebaseComments.push(doc.data());
+            });
+            
+            console.log(`Found ${firebaseComments.length} comments in Firebase for newsletter ${newsletterId}`);
+            
+            // Return only Firebase comments when online
+            // This prevents conflicts between devices
+            return firebaseComments;
+            
+        } catch (error) {
+            console.error('Error fetching comments from Firebase:', error);
+            
+            // Fallback to localStorage only when Firebase fails
+            const localComments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+            return localComments
+                .filter(c => c.newsletterId === newsletterId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+    }
+
+    async loadComments(newsletterId) {
+        const commentsList = document.getElementById('commentsList');
+        if (!commentsList) return;
+        
+        const comments = await this.getComments(newsletterId);
+        
+        if (comments.length === 0) {
+            commentsList.innerHTML = `
+                <div class="no-comments">
+                    <p>No comments yet. Be the first to share your thoughts!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        commentsList.innerHTML = comments.map(comment => this.createCommentHTML(comment)).join('');
+        
+        // Bind delete comment events
+        commentsList.querySelectorAll('.delete-comment-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.deleteComment(e.target.dataset.id));
+        });
+    }
+
+    createCommentHTML(comment) {
+        const date = new Date(comment.date);
+        const formattedDate = date.toLocaleDateString('en-GB', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        return `
+            <div class="comment-item">
+                <div class="comment-header-info">
+                    <span class="comment-author">${this.escapeHtml(comment.author)}</span>
+                    <span class="comment-date">${formattedDate}</span>
+                </div>
+                <div class="comment-content">${this.escapeHtml(comment.content)}</div>
+                <div class="comment-actions">
+                    <button class="delete-comment-btn" data-id="${comment.id}">Delete</button>
+                </div>
+            </div>
+        `;
+    }
+
+    async deleteComment(id) {
+        const password = prompt('Please enter the admin password to delete this comment:');
+        if (!password) {
+            return;
+        }
+        
+        if (password !== 'humanitieslmcm') {
+            this.showNotification('Incorrect password. Deletion cancelled.', 'error');
+            return;
+        }
+        
+        try {
+            // Check if Firebase is initialized
+            if (typeof db !== 'undefined' && db !== null) {
+                // Delete from Firebase Firestore
+                await db.collection('comments').doc(id).delete();
+                console.log('Comment deleted from Firebase successfully');
+            }
+        } catch (error) {
+            console.error('Failed to delete comment from Firebase:', error);
+        }
+        
+        // Also delete from localStorage
+        let comments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
+        comments = comments.filter(comment => comment.id !== id);
+        localStorage.setItem('hishk_comments', JSON.stringify(comments));
+        
+        // Reload comments
+        this.loadComments(this.currentNewsletterId);
+        this.showNotification('Comment deleted successfully.', 'info');
     }
 }
 

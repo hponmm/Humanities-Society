@@ -276,7 +276,7 @@
                         <div class="founder-info">
                             <h3>Michelle Ko</h3>
                             <p class="founder-role">Co-Founder</p>
-                            <p class="founder-bio">Year 11 student with warm brown hair and an endearing, cute demeanor, specializing in cultural history and political philosophy. Editor of our newsletter and coordinator of historical site visits and political guest speaker events.</p>
+                            <p class="founder-bio">I'm Michelle, a Y12 A-level student that is extremely passionate about international relations, modern affairs and international law. In my spare time you'll find me in MUN Conferences, debate competitions and mock trials.</p>
                             <div class="founder-achievements">
                                 <span class="achievement">Historical Essay Award</span>
                                 <span class="achievement">Philosophy Olympiad</span>
@@ -314,6 +314,29 @@
             <div class="newsletter-modal-body">
                 <div class="newsletter-modal-content-text" id="modalNewsletterContent">
                     Newsletter content will appear here...
+                </div>
+                
+                <!-- Comments Section -->
+                <div class="newsletter-comments-section">
+                    <h4 class="comments-header">Comments & Discussion</h4>
+                    
+                    <!-- Add Comment Form -->
+                    <div class="add-comment-form">
+                        <form id="commentForm">
+                            <div class="comment-form-group">
+                                <input type="text" id="commentAuthor" placeholder="Your name (optional)" class="comment-input">
+                            </div>
+                            <div class="comment-form-group">
+                                <textarea id="commentContent" placeholder="Share your thoughts..." class="comment-textarea" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary comment-submit-btn">Post Comment</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Comments List -->
+                    <div class="comments-list" id="commentsList">
+                        <!-- Comments will be loaded dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
