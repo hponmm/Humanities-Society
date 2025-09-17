@@ -25,6 +25,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+    
+    // Allow read/write for comments
+    match /comments/{document} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }
 

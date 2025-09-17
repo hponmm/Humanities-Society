@@ -1077,17 +1077,26 @@ class HISHKHumanitiesSociety {
     bindCommentFormEvents() {
         const commentForm = document.getElementById('commentForm');
         if (commentForm) {
-            // Remove existing listener to avoid duplicates
-            commentForm.replaceWith(commentForm.cloneNode(true));
-            const newForm = document.getElementById('commentForm');
-            newForm.addEventListener('submit', (e) => this.handleCommentSubmit(e));
+            // Remove any existing event listeners first
+            if (this.commentFormHandler) {
+                commentForm.removeEventListener('submit', this.commentFormHandler);
+            }
+            
+            // Create bound handler
+            this.commentFormHandler = (e) => this.handleCommentSubmit(e);
+            
+            // Add new event listener
+            commentForm.addEventListener('submit', this.commentFormHandler);
         }
     }
 
     async handleCommentSubmit(e) {
         e.preventDefault();
         
-        if (!this.currentNewsletterId) return;
+        if (!this.currentNewsletterId) {
+            console.error('No newsletter ID found for comment');
+            return;
+        }
         
         const authorInput = document.getElementById('commentAuthor');
         const contentInput = document.getElementById('commentContent');
@@ -1123,6 +1132,8 @@ class HISHKHumanitiesSociety {
     }
 
     async saveComment(comment) {
+        console.log('Attempting to save comment:', comment);
+        
         try {
             // Check if Firebase is initialized
             if (typeof db === 'undefined' || db === null) {
@@ -1131,12 +1142,14 @@ class HISHKHumanitiesSociety {
                 let comments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
                 comments.push(comment);
                 localStorage.setItem('hishk_comments', JSON.stringify(comments));
+                console.log('Comment saved to localStorage:', comment);
                 return comment;
             }
             
+            console.log('Saving comment to Firebase...', comment);
             // Save to Firebase Firestore (primary storage)
             await db.collection('comments').doc(comment.id).set(comment);
-            console.log('Comment saved to Firebase successfully');
+            console.log('Comment saved to Firebase successfully:', comment.id);
             
             // Clear localStorage comments after successful Firebase save
             // This prevents duplicate/conflicting data between devices
@@ -1145,6 +1158,7 @@ class HISHKHumanitiesSociety {
             return comment;
         } catch (error) {
             console.error('Failed to save comment to Firebase:', error);
+            console.error('Error details:', error.message, error.code);
             
             // Fallback to localStorage only if Firebase fails
             let comments = JSON.parse(localStorage.getItem('hishk_comments') || '[]');
