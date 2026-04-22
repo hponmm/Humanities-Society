@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Humanities Society</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="logo">
                 <h1>Humanities Society</h1>
-                <p>Exploring History, Politics & Culture</p>
+                <p>Exploring History, Politics & Sociology</p>
             </div>
             <nav class="nav">
                 <button class="nav-toggle" id="navToggle">
@@ -21,8 +21,8 @@
                     <span></span>
                 </button>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="#founders" class="nav-link active" data-tab="founders">About Us</a></li>
-                    <li><a href="#newsletter" class="nav-link" data-tab="newsletter">Newsletter</a></li>
+                    <li><a href="#newsletter" class="nav-link active" data-tab="newsletter">Newsletter</a></li>
+                    <li><a href="#founders" class="nav-link" data-tab="founders">About Us</a></li>
                     <li><a href="#competitions" class="nav-link" data-tab="competitions">Competitions & Events</a></li>
                 </ul>
             </nav>
@@ -32,7 +32,7 @@
     <main class="main">
         <div class="container">
             <!-- Newsletter Tab -->
-            <section id="newsletter" class="tab-content">
+            <section id="newsletter" class="tab-content active">
                 <div class="section-header">
                     <h2>Weekly Newsletter</h2>
                     <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
@@ -230,39 +230,24 @@
             </div>
 
             <!-- Founders Tab -->
-            <section id="founders" class="tab-content active">
+            <section id="founders" class="tab-content">
                 <div class="section-header">
                     <h2>About the Humanities Society</h2>
                     <p>A platform for students to extend their knowledge and expand their passion for the humanities</p>
                 </div>
-                
-                <div class="mission-statement" style="margin-bottom: 40px;">
-                    <p style="font-size: 16px; line-height: 1.8; color: var(--text); margin-bottom: 20px;">The Humanities Society is a space for discussion, debate, and reflection on the ideas and events that shape our world, with a particular focus on politics. While our sessions often centre on current affairs and political thought, we are also open to any suggestions on potential topics, either to be led by us, or by our members.</p>
-                    <p style="font-size: 16px; line-height: 1.8; color: var(--text);">One of our main aims this year is to make the society not just group for discussion, but also a platform. If you have an interest you'd like to explore, whether that's writing an article, sharing a presentation, or hosting the competition, this is a place where you can do that. We want to encourage members to contribute their own perspectives, and to use the society as a way to develop and share ideas that go beyond the classroom.</p>
+
+                <div class="mission-statement">
+                    <p>The Humanities Society is a space for discussion, debate, and reflection on the ideas and events that shape our world, with a particular focus on politics. While our sessions often centre on current affairs and political thought, we are also open to any suggestions on potential topics, either to be led by us, or by our members.</p>
+                    <p>One of our main aims this year is to make the society not just group for discussion, but also a platform. If you have an interest you'd like to explore, whether that's writing an article, sharing a presentation, or hosting the competition, this is a place where you can do that. We want to encourage members to contribute their own perspectives, and to use the society as a way to develop and share ideas that go beyond the classroom.</p>
                 </div>
-                
+
                 <div class="section-header">
                     <h3>Meet Our Founders</h3>
                     <p>The passionate students behind the Humanities Society</p>
                 </div>
                 <div class="founders-grid">
                     <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder1.svg" alt="Laila Tse - President" />
-                        </div>
-                        <div class="founder-info">
-                            <h3>Laila Tse</h3>
-                            <p class="founder-role">Co-Founder</p>
-                            <p class="founder-bio">Hi, I'm Laila Tse, a Year 12 student at Harrow International School studying Math, Chemistry, and Politics as my A-levels. I am one of the presidents and founders of the Humanist Society, with an interest in history, politics, and philosophy. The Humanists Society is a platform for students to extend their knowledge and expand their passion for the humanities. Whilst interest in STEAM has continued to grow rapidly, interest in Humanities has begun to dwindle, so I aim to reignite passion for these subjects as they are the basis of our culture and society!</p>
-                            <div class="founder-achievements">
-                                <span class="achievement">Head Editor of the Humanities Harrovian</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder2.svg" alt="Maggie Zhu - Vice President" />
-                        </div>
+                        <div class="founder-monogram">M</div>
                         <div class="founder-info">
                             <h3>Maggie Zhu</h3>
                             <p class="founder-role">Co-Founder</p>
@@ -270,9 +255,7 @@
                         </div>
                     </div>
                     <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder3.svg" alt="Michelle Ko - Secretary" />
-                        </div>
+                        <div class="founder-monogram">M</div>
                         <div class="founder-info">
                             <h3>Michelle Ko</h3>
                             <p class="founder-role">Co-Founder</p>
@@ -284,9 +267,7 @@
                         </div>
                     </div>
                     <div class="founder-card">
-                        <div class="founder-image">
-                            <img src="images/founders/founder4.svg" alt="Carmilla Wang - Co-Founder" />
-                        </div>
+                        <div class="founder-monogram">C</div>
                         <div class="founder-info">
                             <h3>Carmilla Wang</h3>
                             <p class="founder-role">Co-Founder</p>
