@@ -3,6 +3,7 @@
 
 class HISHKHumanitiesSociety {
     constructor() {
+        this.currentSort = 'newest';
         this.init();
         this.loadNewsletters();
         this.loadEvents();
@@ -159,6 +160,15 @@ class HISHKHumanitiesSociety {
                 this.loadNewsletters();
             });
         }
+
+        const newsletterSort = document.getElementById('newsletterSort');
+        if (newsletterSort) {
+            newsletterSort.addEventListener('change', (e) => {
+                this.currentSort = e.target.value;
+                const searchVal = newsletterSearch ? newsletterSearch.value : '';
+                this.loadNewsletters(searchVal);
+            });
+        }
         
         // Event form
         const addEventBtn = document.getElementById('addEventBtn');
@@ -299,6 +309,7 @@ class HISHKHumanitiesSociety {
             content: formData.get('content'),
             imageUrl: formData.get('imageUrl') || '',
             videoUrl: formData.get('videoUrl') || '',
+            likes: 0,
             timestamp: new Date().toISOString()
         };
         
@@ -403,7 +414,7 @@ class HISHKHumanitiesSociety {
     async loadNewsletters(searchTerm = '') {
         let newsletters = await this.getNewsletters();
         const container = document.getElementById('newslettersArchive');
-        
+
         if (!container) return;
 
         // Filter by search term (author or content) if provided
@@ -413,10 +424,20 @@ class HISHKHumanitiesSociety {
                 const author = (n.author || 'Anonymous').toLowerCase();
                 const title = (n.title || '').toLowerCase();
                 const content = (n.content || '').toLowerCase();
-                return author.includes(lowerSearchTerm) || 
-                       title.includes(lowerSearchTerm) || 
+                return author.includes(lowerSearchTerm) ||
+                       title.includes(lowerSearchTerm) ||
                        content.includes(lowerSearchTerm);
             });
+        }
+
+        // Sort
+        const sortBy = this.currentSort || 'newest';
+        if (sortBy === 'oldest') {
+            newsletters.sort((a, b) => new Date(a.date) - new Date(b.date));
+        } else if (sortBy === 'most-liked') {
+            newsletters.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+        } else {
+            newsletters.sort((a, b) => new Date(b.date) - new Date(a.date));
         }
 
         if (newsletters.length === 0) {
@@ -429,7 +450,7 @@ class HISHKHumanitiesSociety {
         }
 
         container.innerHTML = newsletters.map(newsletter => this.createNewsletterPreviewHTML(newsletter)).join('');
-        
+
         // Bind read more events
         container.querySelectorAll('.read-more-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -437,7 +458,7 @@ class HISHKHumanitiesSociety {
                 this.showNewsletterModal(e.target.dataset.id);
             });
         });
-        
+
         // Bind delete events
         container.querySelectorAll('.delete-newsletter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -446,15 +467,24 @@ class HISHKHumanitiesSociety {
             });
         });
 
+        // Bind like button events
+        container.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleLike(btn.dataset.id);
+            });
+        });
+
         // Bind newsletter preview click events
         container.querySelectorAll('.newsletter-preview').forEach(preview => {
             preview.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('read-more-btn') && !e.target.classList.contains('delete-newsletter-btn')) {
+                const tag = e.target.classList;
+                if (!tag.contains('read-more-btn') && !tag.contains('delete-newsletter-btn') && !tag.contains('like-btn') && !tag.contains('like-icon') && !tag.contains('like-count')) {
                     this.showNewsletterModal(preview.dataset.newsletterId);
                 }
             });
         });
-        
+
         // Bind newsletter modal events
         this.bindNewsletterModalEvents();
     }
@@ -467,9 +497,8 @@ class HISHKHumanitiesSociety {
             day: 'numeric'
         });
 
-        // Create excerpt from content (first 150 characters)
-        const excerpt = newsletter.content.length > 150 
-            ? newsletter.content.substring(0, 150) + '...' 
+        const excerpt = newsletter.content.length > 150
+            ? newsletter.content.substring(0, 150) + '...'
             : newsletter.content;
 
         const author = newsletter.author || 'Anonymous';
@@ -482,6 +511,10 @@ class HISHKHumanitiesSociety {
             </div>
         ` : '';
 
+        const likedNewsletters = this.getLikedNewsletters();
+        const isLiked = likedNewsletters.includes(newsletter.id);
+        const likeCount = newsletter.likes || 0;
+
         return `
             <div class="newsletter-preview" data-newsletter-id="${newsletter.id}">
                 <div class="newsletter-preview-header">
@@ -492,6 +525,10 @@ class HISHKHumanitiesSociety {
                 ${mediaIndicator}
                 <p class="newsletter-preview-excerpt">${this.escapeHtml(excerpt)}</p>
                 <div class="newsletter-preview-actions">
+                    <button class="like-btn${isLiked ? ' liked' : ''}" data-id="${newsletter.id}">
+                        <span class="like-icon">&#10084;</span>
+                        <span class="like-count">${likeCount}</span>
+                    </button>
                     <button class="read-more-btn" data-id="${newsletter.id}">Read Full Article</button>
                     <button class="delete-newsletter-btn" data-id="${newsletter.id}">Delete</button>
                 </div>
@@ -592,12 +629,28 @@ class HISHKHumanitiesSociety {
         
         modalContent.innerHTML = contentHTML;
         
+        // Set up modal like button
+        const modalLikeBtn = document.getElementById('modalLikeBtn');
+        if (modalLikeBtn) {
+            const likedNewsletters = this.getLikedNewsletters();
+            const isLiked = likedNewsletters.includes(newsletterId);
+            modalLikeBtn.classList.toggle('liked', isLiked);
+            modalLikeBtn.querySelector('.like-count').textContent = newsletter.likes || 0;
+            modalLikeBtn.dataset.id = newsletterId;
+
+            if (this.modalLikeBtnHandler) {
+                modalLikeBtn.removeEventListener('click', this.modalLikeBtnHandler);
+            }
+            this.modalLikeBtnHandler = () => this.toggleLike(newsletterId);
+            modalLikeBtn.addEventListener('click', this.modalLikeBtnHandler);
+        }
+
         // Load comments for this newsletter
         this.loadComments(newsletterId);
-        
+
         // Bind comment form event
         this.bindCommentFormEvents();
-        
+
         modal.classList.add('active');
         
         // Prevent body scroll when modal is open
@@ -648,6 +701,66 @@ class HISHKHumanitiesSociety {
         
         this.loadNewsletters();
         this.showNotification('Newsletter deleted successfully.', 'info');
+    }
+
+    getLikedNewsletters() {
+        return JSON.parse(localStorage.getItem('hishk_liked_newsletters') || '[]');
+    }
+
+    addLiked(newsletterId) {
+        const liked = this.getLikedNewsletters();
+        if (!liked.includes(newsletterId)) {
+            liked.push(newsletterId);
+            localStorage.setItem('hishk_liked_newsletters', JSON.stringify(liked));
+        }
+    }
+
+    removeLiked(newsletterId) {
+        let liked = this.getLikedNewsletters();
+        liked = liked.filter(id => id !== newsletterId);
+        localStorage.setItem('hishk_liked_newsletters', JSON.stringify(liked));
+    }
+
+    async updateLikeCount(newsletterId, delta) {
+        try {
+            if (typeof db !== 'undefined' && db !== null) {
+                await db.collection('newsletters').doc(newsletterId).update({
+                    likes: firebase.firestore.FieldValue.increment(delta)
+                });
+            } else {
+                let newsletters = JSON.parse(localStorage.getItem('hishk_newsletters') || '[]');
+                const idx = newsletters.findIndex(n => n.id === newsletterId);
+                if (idx !== -1) {
+                    newsletters[idx].likes = Math.max(0, (newsletters[idx].likes || 0) + delta);
+                    localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update like count:', error);
+        }
+    }
+
+    async toggleLike(newsletterId) {
+        const likedNewsletters = this.getLikedNewsletters();
+        const isLiked = likedNewsletters.includes(newsletterId);
+        const delta = isLiked ? -1 : 1;
+
+        if (isLiked) {
+            this.removeLiked(newsletterId);
+        } else {
+            this.addLiked(newsletterId);
+        }
+
+        // Optimistic UI update for all like buttons with this id (preview + modal)
+        document.querySelectorAll(`.like-btn[data-id="${newsletterId}"]`).forEach(btn => {
+            btn.classList.toggle('liked', !isLiked);
+            const countEl = btn.querySelector('.like-count');
+            if (countEl) {
+                countEl.textContent = Math.max(0, parseInt(countEl.textContent || '0') + delta);
+            }
+        });
+
+        await this.updateLikeCount(newsletterId, delta);
     }
 
     escapeHtml(text) {

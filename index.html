@@ -39,9 +39,19 @@
                 </div>
                 <div class="newsletter-controls">
                     <button class="btn-primary" id="addNewsletterBtn">Add New Newsletter</button>
-                    <div class="search-container">
-                        <input type="text" id="newsletterSearch" class="search-input" placeholder="Search by author or topic...">
-                        <button class="btn-secondary" id="clearSearch">Clear</button>
+                    <div class="newsletter-filter-bar">
+                        <div class="sort-container">
+                            <span class="sort-label">Sort:</span>
+                            <select id="newsletterSort" class="sort-select">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="most-liked">Most Liked</option>
+                            </select>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" id="newsletterSearch" class="search-input" placeholder="Search by author or topic...">
+                            <button class="btn-secondary" id="clearSearch">Clear</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -290,7 +300,13 @@
                     <h3 class="newsletter-modal-title" id="modalNewsletterTitle">Newsletter Title</h3>
                     <span class="newsletter-modal-date" id="modalNewsletterDate">Date</span>
                 </div>
-                <button class="newsletter-modal-close" id="newsletterModalClose">&times;</button>
+                <div class="modal-header-actions">
+                    <button class="like-btn" id="modalLikeBtn" data-id="">
+                        <span class="like-icon">&#10084;</span>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="newsletter-modal-close" id="newsletterModalClose">&times;</button>
+                </div>
             </div>
             <div class="newsletter-modal-body">
                 <div class="newsletter-modal-content-text" id="modalNewsletterContent">
