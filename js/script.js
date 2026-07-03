@@ -326,10 +326,10 @@ class HISHKHumanitiesSociety {
             await this.saveNewsletter(newsletter);
             this.hideNewsletterForm();
             this.loadNewsletters();
-            this.showNotification('Newsletter published successfully!', 'success');
+            this.showNotification('Article published successfully!', 'success');
         } catch (error) {
             console.error('Error publishing newsletter:', error);
-            this.showNotification('Failed to publish newsletter. Check console for details.', 'error');
+            this.showNotification('Failed to publish article. Check console for details.', 'error');
         }
     }
 
@@ -443,7 +443,7 @@ class HISHKHumanitiesSociety {
         if (newsletters.length === 0) {
             container.innerHTML = `
                 <div class="no-newsletters">
-                    <p>${searchTerm ? `No newsletters found matching "${searchTerm}"` : 'No newsletters published yet. Click "Add New Newsletter" to create the first one!'}</p>
+                    <p>${searchTerm ? `No articles found matching "${searchTerm}"` : 'No articles published yet. Click "Add New Article" to create the first one!'}</p>
                 </div>
             `;
             return;
@@ -700,7 +700,7 @@ class HISHKHumanitiesSociety {
         localStorage.setItem('hishk_newsletters', JSON.stringify(newsletters));
         
         this.loadNewsletters();
-        this.showNotification('Newsletter deleted successfully.', 'info');
+        this.showNotification('Article deleted successfully.', 'info');
     }
 
     getLikedNewsletters() {

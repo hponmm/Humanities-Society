@@ -21,7 +21,7 @@
                     <span></span>
                 </button>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="#newsletter" class="nav-link active" data-tab="newsletter">Newsletter</a></li>
+                    <li><a href="#newsletter" class="nav-link active" data-tab="newsletter">Articles</a></li>
                     <li><a href="#founders" class="nav-link" data-tab="founders">About Us</a></li>
                     <li><a href="#competitions" class="nav-link" data-tab="competitions">Competitions & Events</a></li>
                 </ul>
@@ -36,16 +36,16 @@
                 <div class="newsletter-hero">
                     <div class="newsletter-hero-inner">
                         <span class="newsletter-hero-label">Humanities Society</span>
-                        <h2>Weekly Newsletter</h2>
+                        <h2>Articles</h2>
                         <p>History · Politics · Sociology</p>
                     </div>
                 </div>
                 <div class="section-header" style="margin-top: 40px;">
-                    <h2>Newsletter Archive</h2>
+                    <h2>Article Archive</h2>
                     <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
                 </div>
                 <div class="newsletter-controls">
-                    <button class="btn-primary" id="addNewsletterBtn">Add New Newsletter</button>
+                    <button class="btn-primary" id="addNewsletterBtn">Add New Article</button>
                     <div class="newsletter-filter-bar">
                         <div class="sort-container">
                             <span class="sort-label">Sort:</span>
@@ -65,11 +65,11 @@
                 <!-- Add Newsletter Form -->
                 <div class="newsletter-form" id="newsletterForm">
                     <div class="form-container">
-                        <h3>Add New Newsletter</h3>
+                        <h3>Add New Article</h3>
                         <form id="newsletterFormElement">
                             <div class="form-group">
-                                <label for="newsletterTitle">Newsletter Title</label>
-                                <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., Week of March 4-10, 2024">
+                                <label for="newsletterTitle">Article Title</label>
+                                <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., The Rise of Populism in Europe">
                             </div>
                             <div class="form-group">
                                 <label for="newsletterAuthor">Author Name</label>
@@ -80,8 +80,8 @@
                                 <input type="date" id="newsletterDate" name="date" required>
                             </div>
                             <div class="form-group">
-                                <label for="newsletterContent">Newsletter Content</label>
-                                <textarea id="newsletterContent" name="content" required placeholder="Write your newsletter content here..."></textarea>
+                                <label for="newsletterContent">Article Content</label>
+                                <textarea id="newsletterContent" name="content" required placeholder="Write your article content here..."></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="newsletterImageUrl">Image URL (optional)</label>
@@ -92,7 +92,7 @@
                                 <input type="url" id="newsletterVideoUrl" name="videoUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="btn-primary">Publish Newsletter</button>
+                                <button type="submit" class="btn-primary">Publish Article</button>
                                 <button type="button" class="btn-secondary" id="cancelNewsletterBtn">Cancel</button>
                             </div>
                         </form>
@@ -272,12 +272,12 @@
                 <div class="founders-grid">
                     <div class="founder-card">
                         <div class="founder-photo-wrap">
-                            <img src="images/founders/maggie.jpg" alt="Maggie Zhu" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.marginTop='28px'">
+                            <img src="images/founders/maggie.png" alt="Maggie Zhu" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.marginTop='28px'">
                         </div>
                         <div class="founder-info">
                             <h3>Maggie Zhu</h3>
                             <p class="founder-role">Co-Founder</p>
-                            <p class="founder-bio">I'm Maggie Zhu, a Year 12 student. I'm currently studying Math, Further Maths, Politics and Economics and I'm really interested in politics! I hope that through our society, pupils will be able to further explore their own interests and use our website as a platform to show off their interests to others!</p>
+                            <p class="founder-bio">I'm Maggie Zhu, a Y13 student who is very passionate about politics as well as environmentalism! When I'm not at school, you'll often spot me going on a run on the Macklehose trail, or in the art studio. If you're interested in any of this, feel free to come talk to me at any time!</p>
                         </div>
                     </div>
                     <div class="founder-card">
@@ -313,7 +313,7 @@
         <div class="newsletter-modal-content">
             <div class="newsletter-modal-header">
                 <div>
-                    <h3 class="newsletter-modal-title" id="modalNewsletterTitle">Newsletter Title</h3>
+                    <h3 class="newsletter-modal-title" id="modalNewsletterTitle">Article Title</h3>
                     <span class="newsletter-modal-date" id="modalNewsletterDate">Date</span>
                 </div>
                 <div class="modal-header-actions">
@@ -326,7 +326,7 @@
             </div>
             <div class="newsletter-modal-body">
                 <div class="newsletter-modal-content-text" id="modalNewsletterContent">
-                    Newsletter content will appear here...
+                    Article content will appear here...
                 </div>
                 
                 <!-- Comments Section -->
