@@ -69,11 +69,11 @@
                         <form id="newsletterFormElement">
                             <div class="form-group">
                                 <label for="newsletterTitle">Article Title</label>
-                                <input type="text" id="newsletterTitle" name="title" required placeholder="e.g., The Rise of Populism in Europe">
+                                <input type="text" id="newsletterTitle" maxlength="200" name="title" required placeholder="e.g., The Rise of Populism in Europe">
                             </div>
                             <div class="form-group">
                                 <label for="newsletterAuthor">Author Name</label>
-                                <input type="text" id="newsletterAuthor" name="author" placeholder="e.g., John Smith (optional)">
+                                <input type="text" id="newsletterAuthor" maxlength="100" name="author" placeholder="e.g., John Smith (optional)">
                             </div>
                             <div class="form-group">
                                 <label for="newsletterDate">Publication Date</label>
@@ -81,15 +81,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="newsletterContent">Article Content</label>
-                                <textarea id="newsletterContent" name="content" required placeholder="Write your article content here..."></textarea>
+                                <textarea id="newsletterContent" maxlength="20000" name="content" required placeholder="Write your article content here..."></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="newsletterImageUrl">Image URL (optional)</label>
-                                <input type="url" id="newsletterImageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                                <input type="url" id="newsletterImageUrl" maxlength="500" name="imageUrl" placeholder="https://example.com/image.jpg">
                             </div>
                             <div class="form-group">
                                 <label for="newsletterVideoUrl">Video URL (optional)</label>
-                                <input type="url" id="newsletterVideoUrl" name="videoUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
+                                <input type="url" id="newsletterVideoUrl" maxlength="500" name="videoUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-primary">Publish Article</button>
@@ -142,13 +142,13 @@
                 </div>
                 
                 <!-- Add Event Form -->
-                <div class="event-form" id="eventForm" style="display: none; margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+                <div class="event-form" id="eventForm" style="display: none; margin: 20px 0; padding: 20px; background: #f4f4f5; border-radius: 3px;">
                     <div class="form-container">
                         <h3>Create New Event</h3>
                         <form id="eventFormElement">
                             <div class="form-group">
                                 <label for="eventName">Event Name</label>
-                                <input type="text" id="eventName" name="name" required placeholder="e.g., History Bowl Championship">
+                                <input type="text" id="eventName" maxlength="200" name="name" required placeholder="e.g., History Bowl Championship">
                             </div>
                             <div class="form-group">
                                 <label for="eventDate">Event Date</label>
@@ -164,27 +164,27 @@
                             </div>
                             <div class="form-group">
                                 <label for="eventHosts">Hosted By</label>
-                                <input type="text" id="eventHosts" name="hosts" required placeholder="e.g., John Smith, Jane Doe">
+                                <input type="text" id="eventHosts" maxlength="200" name="hosts" required placeholder="e.g., John Smith, Jane Doe">
                             </div>
                             <div class="form-group">
                                 <label for="eventDescription">Description</label>
-                                <textarea id="eventDescription" name="description" required placeholder="Describe the event..." rows="4"></textarea>
+                                <textarea id="eventDescription" maxlength="5000" name="description" required placeholder="Describe the event..." rows="4"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="eventLocation">Location</label>
-                                <input type="text" id="eventLocation" name="location" placeholder="e.g., Main Auditorium">
+                                <input type="text" id="eventLocation" maxlength="200" name="location" placeholder="e.g., Main Auditorium">
                             </div>
                             <div class="form-group">
                                 <label for="eventCapacity">Capacity (optional)</label>
-                                <input type="number" id="eventCapacity" name="capacity" placeholder="e.g., 50">
+                                <input type="number" id="eventCapacity" min="1" max="10000" name="capacity" placeholder="e.g., 50">
                             </div>
                             <div class="form-group">
                                 <label for="eventTags">Tags (comma-separated, optional)</label>
-                                <input type="text" id="eventTags" name="tags" placeholder="e.g., history, debate, competition">
+                                <input type="text" id="eventTags" maxlength="300" name="tags" placeholder="e.g., history, debate, competition">
                             </div>
                             <div class="form-group">
                                 <label for="eventFormUrl">Application Form URL (optional)</label>
-                                <input type="url" id="eventFormUrl" name="formUrl" placeholder="https://forms.google.com/...">
+                                <input type="url" id="eventFormUrl" maxlength="500" name="formUrl" placeholder="https://forms.google.com/...">
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-primary">Create Event</button>
@@ -209,11 +209,11 @@
                     <form id="applicationForm">
                         <div class="form-group">
                             <label for="applicantName">Full Name *</label>
-                            <input type="text" id="applicantName" name="name" required>
+                            <input type="text" id="applicantName" maxlength="100" name="name" required>
                         </div>
                         <div class="form-group">
                             <label for="applicantEmail">Email Address *</label>
-                            <input type="email" id="applicantEmail" name="email" required>
+                            <input type="email" id="applicantEmail" maxlength="200" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="applicantYear">Year Group *</label>
@@ -228,15 +228,15 @@
                         </div>
                         <div class="form-group" id="teamMembersGroup" style="display: none;">
                             <label for="teamMembers">Team Member Names</label>
-                            <textarea id="teamMembers" name="teamMembers" placeholder="List your team members' names (one per line)"></textarea>
+                            <textarea id="teamMembers" maxlength="1000" name="teamMembers" placeholder="List your team members' names (one per line)"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="experience">Relevant Experience</label>
-                            <textarea id="experience" name="experience" placeholder="Tell us about your background in this subject area"></textarea>
+                            <textarea id="experience" maxlength="3000" name="experience" placeholder="Tell us about your background in this subject area"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="motivation">Why do you want to participate? *</label>
-                            <textarea id="motivation" name="motivation" required placeholder="Explain your motivation for joining this competition"></textarea>
+                            <textarea id="motivation" maxlength="3000" name="motivation" required placeholder="Explain your motivation for joining this competition"></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn-primary">Submit Application</button>
@@ -281,7 +281,9 @@
                         </div>
                     </div>
                     <div class="founder-card">
-                        <div class="founder-monogram">M</div>
+                        <div class="founder-photo-wrap">
+                            <img src="images/founders/michelle.png" alt="Michelle Ko" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.marginTop='28px'">
+                        </div>
                         <div class="founder-info">
                             <h3>Michelle Ko</h3>
                             <p class="founder-role">Co-Founder</p>
@@ -293,7 +295,9 @@
                         </div>
                     </div>
                     <div class="founder-card">
-                        <div class="founder-monogram">C</div>
+                        <div class="founder-photo-wrap">
+                            <img src="images/founders/carmilla.png" alt="Carmilla Wang" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.marginTop='28px'">
+                        </div>
                         <div class="founder-info">
                             <h3>Carmilla Wang</h3>
                             <p class="founder-role">Co-Founder</p>
@@ -337,10 +341,10 @@
                     <div class="add-comment-form">
                         <form id="commentForm">
                             <div class="comment-form-group">
-                                <input type="text" id="commentAuthor" placeholder="Your name (optional)" class="comment-input">
+                                <input type="text" id="commentAuthor" maxlength="100" placeholder="Your name (optional)" class="comment-input">
                             </div>
                             <div class="comment-form-group">
-                                <textarea id="commentContent" placeholder="Share your thoughts..." class="comment-textarea" required></textarea>
+                                <textarea id="commentContent" maxlength="2000" placeholder="Share your thoughts..." class="comment-textarea" required></textarea>
                             </div>
                             <button type="submit" class="btn-primary comment-submit-btn">Post Comment</button>
                         </form>

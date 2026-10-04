@@ -307,8 +307,8 @@ class HISHKHumanitiesSociety {
             author: formData.get('author') || 'Anonymous',
             date: formData.get('date'),
             content: formData.get('content'),
-            imageUrl: formData.get('imageUrl') || '',
-            videoUrl: formData.get('videoUrl') || '',
+            imageUrl: this.safeUrl(formData.get('imageUrl')),
+            videoUrl: this.safeUrl(formData.get('videoUrl')),
             likes: 0,
             timestamp: new Date().toISOString()
         };
@@ -516,7 +516,7 @@ class HISHKHumanitiesSociety {
         const likeCount = newsletter.likes || 0;
 
         return `
-            <div class="newsletter-preview" data-newsletter-id="${newsletter.id}">
+            <div class="newsletter-preview" data-newsletter-id="${this.escapeHtml(newsletter.id)}">
                 <div class="newsletter-preview-header">
                     <h3 class="newsletter-preview-title">${this.escapeHtml(newsletter.title)}</h3>
                     <span class="newsletter-preview-date">${formattedDate}</span>
@@ -525,12 +525,12 @@ class HISHKHumanitiesSociety {
                 ${mediaIndicator}
                 <p class="newsletter-preview-excerpt">${this.escapeHtml(excerpt)}</p>
                 <div class="newsletter-preview-actions">
-                    <button class="like-btn${isLiked ? ' liked' : ''}" data-id="${newsletter.id}">
+                    <button class="like-btn${isLiked ? ' liked' : ''}" data-id="${this.escapeHtml(newsletter.id)}">
                         <span class="like-icon">&#10084;</span>
-                        <span class="like-count">${likeCount}</span>
+                        <span class="like-count">${Number(likeCount) || 0}</span>
                     </button>
-                    <button class="read-more-btn" data-id="${newsletter.id}">Read Full Article</button>
-                    <button class="delete-newsletter-btn" data-id="${newsletter.id}">Delete</button>
+                    <button class="read-more-btn" data-id="${this.escapeHtml(newsletter.id)}">Read Full Article</button>
+                    <button class="delete-newsletter-btn" data-id="${this.escapeHtml(newsletter.id)}">Delete</button>
                 </div>
             </div>
         `;
@@ -595,31 +595,33 @@ class HISHKHumanitiesSociety {
         let contentHTML = '';
         
         // Add image if present
-        if (newsletter.imageUrl) {
+        const imageUrl = this.safeUrl(newsletter.imageUrl);
+        const videoUrl = this.safeUrl(newsletter.videoUrl);
+        if (imageUrl) {
             contentHTML += `<div class="newsletter-media">
-                <img src="${newsletter.imageUrl}" alt="Newsletter image" class="newsletter-image" />
+                <img src="${this.escapeHtml(imageUrl)}" alt="Newsletter image" class="newsletter-image" />
             </div>`;
         }
         
         // Add video if present (support YouTube embeds)
-        if (newsletter.videoUrl) {
-            let videoEmbed = newsletter.videoUrl;
+        if (videoUrl) {
+            let videoEmbed = videoUrl;
             // Convert YouTube watch URLs to embed URLs
             if (videoEmbed.includes('youtube.com/watch?v=')) {
-                const videoId = videoEmbed.split('v=')[1].split('&')[0];
+                const videoId = encodeURIComponent(videoEmbed.split('v=')[1].split('&')[0]);
                 videoEmbed = `https://www.youtube.com/embed/${videoId}`;
                 contentHTML += `<div class="newsletter-media">
                     <iframe src="${videoEmbed}" class="newsletter-video" frameborder="0" allowfullscreen></iframe>
                 </div>`;
             } else if (videoEmbed.includes('youtu.be/')) {
-                const videoId = videoEmbed.split('youtu.be/')[1].split('?')[0];
+                const videoId = encodeURIComponent(videoEmbed.split('youtu.be/')[1].split('?')[0]);
                 videoEmbed = `https://www.youtube.com/embed/${videoId}`;
                 contentHTML += `<div class="newsletter-media">
                     <iframe src="${videoEmbed}" class="newsletter-video" frameborder="0" allowfullscreen></iframe>
                 </div>`;
             } else {
                 contentHTML += `<div class="newsletter-media">
-                    <a href="${newsletter.videoUrl}" target="_blank" class="video-link">🎥 Watch Video</a>
+                    <a href="${this.escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="video-link">🎥 Watch Video</a>
                 </div>`;
             }
         }
@@ -764,9 +766,22 @@ class HISHKHumanitiesSociety {
     }
 
     escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        return String(text ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Only allow http(s) links, so stored URLs can't run scripts (e.g. "javascript:...")
+    safeUrl(url) {
+        try {
+            const parsed = new URL(String(url || '').trim());
+            return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+        } catch {
+            return '';
+        }
     }
 
     handleCompetitionApplication(e) {
@@ -900,7 +915,7 @@ class HISHKHumanitiesSociety {
                     top: 20px;
                     right: 20px;
                     background: white;
-                    border-radius: 8px;
+                    border-radius: 3px;
                     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
                     z-index: 1000;
                     min-width: 300px;
@@ -997,7 +1012,7 @@ class HISHKHumanitiesSociety {
             tags: tagsString ? tagsString.split(',').map(tag => tag.trim()) : [],
             location: formData.get('location') || '',
             capacity: formData.get('capacity') || '',
-            formUrl: formData.get('formUrl') || '',
+            formUrl: this.safeUrl(formData.get('formUrl')),
             timestamp: new Date().toISOString()
         };
         
@@ -1091,7 +1106,8 @@ class HISHKHumanitiesSociety {
         container.querySelectorAll('.apply-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 if (e.target.dataset.formUrl) {
-                    window.open(e.target.dataset.formUrl, '_blank');
+                    const url = this.safeUrl(e.target.dataset.formUrl);
+                    if (url) window.open(url, '_blank', 'noopener');
                 } else {
                     this.handleCompetitionApplication(e);
                 }
@@ -1132,20 +1148,20 @@ class HISHKHumanitiesSociety {
             <div class="competition-card current">
                 <div class="competition-status">User Created</div>
                 <h3>${this.escapeHtml(event.name)}</h3>
-                <p class="competition-date">${formattedDate} | ${event.startTime} - ${event.endTime}</p>
+                <p class="competition-date">${formattedDate} | ${this.escapeHtml(event.startTime)} - ${this.escapeHtml(event.endTime)}</p>
                 <p class="competition-desc">${this.escapeHtml(event.description)}</p>
                 <div class="event-meta">
                     <p class="event-hosts"><strong>Hosted by:</strong> ${this.escapeHtml(hostsString)}</p>
                     <p class="event-location"><strong>Location:</strong> ${this.escapeHtml(event.location)}</p>
-                    ${event.capacity ? `<p class="event-capacity"><strong>Capacity:</strong> ${event.capacity} participants</p>` : ''}
+                    ${event.capacity ? `<p class="event-capacity"><strong>Capacity:</strong> ${this.escapeHtml(event.capacity)} participants</p>` : ''}
                 </div>
                 ${tagsHTML ? `<div class="competition-details">${tagsHTML}</div>` : ''}
                 <div class="event-actions">
-                    ${event.formUrl 
-                        ? `<button class="apply-btn" data-form-url="${event.formUrl}">Apply Now</button>`
-                        : `<button class="apply-btn" data-competition="${event.id}">Apply Now</button>`
+                    ${this.safeUrl(event.formUrl)
+                        ? `<button class="apply-btn" data-form-url="${this.escapeHtml(this.safeUrl(event.formUrl))}">Apply Now</button>`
+                        : `<button class="apply-btn" data-competition="${this.escapeHtml(event.id)}">Apply Now</button>`
                     }
-                    <button class="delete-event-btn" data-id="${event.id}">Delete</button>
+                    <button class="delete-event-btn" data-id="${this.escapeHtml(event.id)}">Delete</button>
                 </div>
             </div>
         `;
@@ -1364,7 +1380,7 @@ class HISHKHumanitiesSociety {
                 </div>
                 <div class="comment-content">${this.escapeHtml(comment.content)}</div>
                 <div class="comment-actions">
-                    <button class="delete-comment-btn" data-id="${comment.id}">Delete</button>
+                    <button class="delete-comment-btn" data-id="${this.escapeHtml(comment.id)}">Delete</button>
                 </div>
             </div>
         `;

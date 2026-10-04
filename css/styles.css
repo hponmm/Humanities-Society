@@ -1,29 +1,29 @@
 /* Humanities Society — student club, friendly, modern */
 
 :root {
-    --bg: #EEF1F8;
+    --bg: #F0F1F2;
     --surface: #FFFFFF;
-    --surface-2: #F5F7FC;
-    --primary: #5C6BC0;
-    --primary-dark: #3D4DAA;
-    --primary-light: #EEF0FB;
-    --text: #1A1C2E;
-    --text-muted: #5B6280;
-    --text-light: #9499B0;
-    --border: #DDE1F0;
-    --border-light: #ECEEF8;
-    --pink: #E8608A;
-    --pink-light: #FDEEF4;
-    --green: #38B27E;
-    --green-light: #E8F7F1;
-    --gold: #D4973A;
-    --gold-light: #FDF3E3;
-    --shadow-sm: 0 2px 8px rgba(92, 107, 192, 0.07);
-    --shadow-md: 0 6px 24px rgba(92, 107, 192, 0.12);
-    --shadow-lg: 0 16px 48px rgba(92, 107, 192, 0.16);
-    --radius: 14px;
-    --radius-sm: 8px;
-    --radius-lg: 20px;
+    --surface-2: #F4F4F5;
+    --primary: #4D6A88;
+    --primary-dark: #364D66;
+    --primary-light: #EBF0F5;
+    --text: #1E1F22;
+    --text-muted: #5F636A;
+    --text-light: #9A9DA3;
+    --border: #D6D8DB;
+    --border-light: #E8E9EB;
+    --pink: #9A6B78;
+    --pink-light: #F3EEEF;
+    --green: #5E8170;
+    --green-light: #EDF1EF;
+    --gold: #9A7F56;
+    --gold-light: #F3F0EB;
+    --shadow-sm: 0 2px 8px rgba(30, 31, 34, 0.07);
+    --shadow-md: 0 6px 24px rgba(30, 31, 34, 0.12);
+    --shadow-lg: 0 16px 48px rgba(30, 31, 34, 0.16);
+    --radius: 4px;
+    --radius-sm: 3px;
+    --radius-lg: 6px;
     --transition: all 0.2s ease;
     --font: 'Poppins', system-ui, -apple-system, sans-serif;
 }
@@ -52,7 +52,7 @@ body {
 
 /* ── Header ── */
 .header {
-    background: linear-gradient(135deg, #3D4DAA 0%, #5C6BC0 50%, #7B5EA7 100%);
+    background: var(--primary);
     color: #fff;
     padding: 28px 0;
     position: relative;
@@ -63,9 +63,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        radial-gradient(circle at 15% 60%, rgba(255,255,255,0.08) 0%, transparent 45%),
-        radial-gradient(circle at 85% 20%, rgba(255,255,255,0.06) 0%, transparent 40%);
+    background-image: none;
     pointer-events: none;
 }
 
@@ -107,7 +105,7 @@ body {
     font-weight: 500;
     padding: 8px 14px;
     font-size: 13.5px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     transition: var(--transition);
 }
 
@@ -209,7 +207,7 @@ body {
     top: 0;
     bottom: 0;
     width: 5px;
-    background: linear-gradient(180deg, var(--primary) 0%, var(--pink) 100%);
+    background: var(--primary);
     border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
@@ -269,15 +267,15 @@ body {
 }
 
 .founder-card:nth-child(1)::before {
-    background: linear-gradient(90deg, var(--primary) 0%, #7B5EA7 100%);
+    background: var(--primary);
 }
 
 .founder-card:nth-child(2)::before {
-    background: linear-gradient(90deg, var(--pink) 0%, #C244A0 100%);
+    background: var(--pink);
 }
 
 .founder-card:nth-child(3)::before {
-    background: linear-gradient(90deg, var(--green) 0%, #1E9060 100%);
+    background: var(--green);
 }
 
 .founder-photo-wrap {
@@ -346,7 +344,7 @@ body {
     margin-bottom: 12px;
     display: inline-block;
     padding: 3px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
 }
 
 .founder-card:nth-child(1) .founder-role {
@@ -379,7 +377,7 @@ body {
 
 .achievement {
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -389,19 +387,19 @@ body {
 .founder-card:nth-child(1) .achievement {
     background: var(--primary-light);
     color: var(--primary);
-    border-color: #C5C9EF;
+    border-color: #C4C6CA;
 }
 
 .founder-card:nth-child(2) .achievement {
     background: var(--pink-light);
     color: var(--pink);
-    border-color: #F2BAD0;
+    border-color: #D9CACE;
 }
 
 .founder-card:nth-child(3) .achievement {
     background: var(--green-light);
     color: var(--green);
-    border-color: #A8DFC7;
+    border-color: #C6D2CB;
 }
 
 /* ── Competitions / events ── */
@@ -441,14 +439,14 @@ body {
     top: 20px;
     right: 20px;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     background: var(--primary-light);
     color: var(--primary);
-    border: 1.5px solid #C5C9EF;
+    border: 1.5px solid #C4C6CA;
 }
 
 .competition-card h3 {
@@ -485,7 +483,7 @@ body {
 .detail {
     background: var(--surface-2);
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 11px;
     font-weight: 600;
     color: var(--text-muted);
@@ -497,7 +495,7 @@ body {
 .btn-secondary,
 .apply-btn {
     padding: 10px 20px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
@@ -519,7 +517,7 @@ body {
     background: var(--primary-dark);
     border-color: var(--primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(92, 107, 192, 0.3);
+    box-shadow: 0 4px 12px rgba(30, 31, 34, 0.3);
 }
 
 .apply-btn {
@@ -599,7 +597,7 @@ body {
 .sort-select {
     padding: 9px 12px;
     border: 1.5px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     background: var(--surface);
     color: var(--text);
@@ -612,7 +610,7 @@ body {
 .sort-select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.12);
+    box-shadow: 0 0 0 3px rgba(30, 31, 34, 0.12);
 }
 
 .search-container {
@@ -624,7 +622,7 @@ body {
 .search-input {
     padding: 9px 16px;
     border: 1.5px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 13.5px;
     width: 230px;
     background: var(--surface);
@@ -636,7 +634,7 @@ body {
 .search-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.12);
+    box-shadow: 0 0 0 3px rgba(30, 31, 34, 0.12);
 }
 
 /* ── Newsletter form ── */
@@ -705,7 +703,7 @@ body {
 .form-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.12);
+    box-shadow: 0 0 0 3px rgba(30, 31, 34, 0.12);
 }
 
 .form-group textarea {
@@ -784,8 +782,8 @@ body {
     white-space: nowrap;
     padding: 4px 11px;
     background: var(--primary-light);
-    border-radius: 999px;
-    border: 1.5px solid #C5C9EF;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid #C4C6CA;
     flex-shrink: 0;
     align-self: flex-start;
     margin-top: 2px;
@@ -818,7 +816,7 @@ body {
     align-items: center;
     gap: 5px;
     padding: 7px 13px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     border: 1.5px solid var(--border);
     background: transparent;
     color: var(--text-muted);
@@ -862,7 +860,7 @@ body {
 .read-more-btn,
 .delete-newsletter-btn {
     padding: 8px 18px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
@@ -886,7 +884,7 @@ body {
     background: transparent;
     color: #D04848;
     border: 1.5px solid #EACACA;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
 }
 
 .delete-newsletter-btn:hover {
@@ -925,7 +923,7 @@ body {
 
 .event-actions .apply-btn {
     flex: 1;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
 }
 
 .delete-event-btn {
@@ -933,7 +931,7 @@ body {
     background: transparent;
     color: #D04848;
     border: 1.5px solid #EACACA;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
@@ -1027,7 +1025,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: var(--radius-sm);
     transition: var(--transition);
     flex-shrink: 0;
 }
@@ -1085,7 +1083,7 @@ body {
     background: var(--primary);
     color: #fff;
     text-decoration: none;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     transition: var(--transition);
     font-size: 13.5px;
@@ -1111,7 +1109,7 @@ body {
     padding: 4px 10px;
     background: var(--surface-2);
     color: var(--text-muted);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 11px;
     font-weight: 600;
     border: 1.5px solid var(--border);
@@ -1161,7 +1159,7 @@ body {
 .comment-textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.12);
+    box-shadow: 0 0 0 3px rgba(30, 31, 34, 0.12);
 }
 
 .comment-textarea {
@@ -1227,7 +1225,7 @@ body {
     font-size: 12px;
     cursor: pointer;
     padding: 3px 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     transition: var(--transition);
     font-family: inherit;
     font-weight: 600;
@@ -1249,7 +1247,7 @@ body {
 
 /* ── Footer ── */
 .footer {
-    background: linear-gradient(135deg, #2C2F52 0%, #3D4DAA 100%);
+    background: var(--primary-dark);
     color: rgba(255,255,255,0.75);
     padding: 28px 0;
     text-align: center;
@@ -1302,7 +1300,7 @@ body {
     border-radius: var(--radius-lg);
     overflow: hidden;
     position: relative;
-    background: linear-gradient(120deg, #3D4DAA 0%, #5C6BC0 55%, #7B5EA7 100%);
+    background: var(--primary);
     display: flex;
     align-items: center;
     padding: 36px 44px;
@@ -1314,9 +1312,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        radial-gradient(ellipse at 8% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 20%, rgba(255,255,255,0.07) 0%, transparent 40%);
+    background-image: none;
     pointer-events: none;
 }
 
@@ -1360,7 +1356,7 @@ body {
     overflow: hidden;
     margin-bottom: 40px;
     position: relative;
-    background: linear-gradient(135deg, #3D4DAA 0%, #5C6BC0 50%, #7B5EA7 100%);
+    background: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1371,9 +1367,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        radial-gradient(circle at 20% 60%, rgba(255,255,255,0.1) 0%, transparent 45%),
-        radial-gradient(circle at 75% 30%, rgba(255,255,255,0.06) 0%, transparent 40%);
+    background-image: none;
 }
 
 .about-banner-text {
@@ -1400,10 +1394,10 @@ body {
 }
 
 /* ── Colorful tag variants (kept for JS-rendered content) ── */
-.tag-gold  { background: var(--gold-light);    color: var(--gold);    border-color: #EAD4A0; }
-.tag-rose  { background: var(--pink-light);    color: var(--pink);    border-color: #F2BAD0; }
-.tag-sage  { background: var(--green-light);   color: var(--green);   border-color: #A8DFC7; }
-.tag-slate { background: var(--primary-light); color: var(--primary); border-color: #C5C9EF; }
+.tag-gold  { background: var(--gold-light);    color: var(--gold);    border-color: #D9D0C2; }
+.tag-rose  { background: var(--pink-light);    color: var(--pink);    border-color: #D9CACE; }
+.tag-sage  { background: var(--green-light);   color: var(--green);   border-color: #C6D2CB; }
+.tag-slate { background: var(--primary-light); color: var(--primary); border-color: #C4C6CA; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {

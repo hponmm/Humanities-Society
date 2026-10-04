@@ -1,41 +1,104 @@
 // Firebase Firestore Security Rules for Humanities Society
-// Copy and paste these rules into Firebase Console > Firestore Database > Rules
+// Copy and paste these rules into Firebase Console > Firestore Database > Rules, then click Publish.
+//
+// What these rules do:
+// - Anyone can read articles, events and comments.
+// - New articles, events and comments must have the right fields, types and sizes
+//   (stops people dumping huge or malformed data into the database).
+// - Once posted, articles can only have their like count changed, by 1 at a time.
+//   Events and comments can't be edited at all.
+// - Competition applications are only stored in the visitor's browser, so the
+//   database blocks that collection completely (it would otherwise expose emails).
+//
+// Still open: deleting. The site's admin password is checked in the browser only,
+// so anyone who knows how could still delete content directly. Fixing that properly
+// needs Firebase Authentication (an admin login) — see the note at the bottom.
 
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to read newsletters
-    match /newsletters/{document} {
-      allow read: if true;
-      // Only allow write operations (create, update, delete) - no authentication for now
-      // In production, you should add authentication
-      allow write: if true;
+
+    function str(v, maxLen) {
+      return v is string && v.size() <= maxLen;
     }
-    
-    // Allow anyone to read events
-    match /events/{document} {
-      allow read: if true;
-      // Only allow write operations (create, update, delete) - no authentication for now
-      // In production, you should add authentication
-      allow write: if true;
+
+    function okUrl(v) {
+      return v is string && v.size() <= 500 && (v == '' || v.matches('https?://.*'));
     }
-    
-    // Allow read/write for competition applications
-    match /applications/{document} {
+
+    match /newsletters/{id} {
       allow read: if true;
-      allow write: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(
+                         ['id', 'title', 'author', 'date', 'content', 'imageUrl', 'videoUrl', 'likes', 'timestamp'])
+                    && request.resource.data.id == id
+                    && str(request.resource.data.title, 200) && request.resource.data.title.size() > 0
+                    && str(request.resource.data.author, 100)
+                    && str(request.resource.data.date, 20)
+                    && str(request.resource.data.content, 20000) && request.resource.data.content.size() > 0
+                    && okUrl(request.resource.data.imageUrl)
+                    && okUrl(request.resource.data.videoUrl)
+                    && request.resource.data.likes == 0
+                    && str(request.resource.data.timestamp, 40);
+
+      // Likes only: one field, changed by exactly +1 or -1, never below zero.
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
+                    && request.resource.data.likes is int
+                    && request.resource.data.likes >= 0
+                    && (request.resource.data.likes == resource.data.get('likes', 0) + 1
+                        || request.resource.data.likes == resource.data.get('likes', 0) - 1);
+
+      allow delete: if true; // TODO: restrict to admins once Firebase Authentication is set up
     }
-    
-    // Allow read/write for comments
-    match /comments/{document} {
+
+    match /events/{id} {
       allow read: if true;
-      allow write: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(
+                         ['id', 'name', 'date', 'startTime', 'endTime', 'hosts', 'description',
+                          'tags', 'location', 'capacity', 'formUrl', 'timestamp'])
+                    && request.resource.data.id == id
+                    && str(request.resource.data.name, 200) && request.resource.data.name.size() > 0
+                    && str(request.resource.data.date, 20)
+                    && str(request.resource.data.startTime, 10)
+                    && str(request.resource.data.endTime, 10)
+                    && str(request.resource.data.hosts, 200)
+                    && str(request.resource.data.description, 5000)
+                    && request.resource.data.tags is list && request.resource.data.tags.size() <= 20
+                    && str(request.resource.data.location, 200)
+                    && str(request.resource.data.capacity, 10)
+                    && okUrl(request.resource.data.formUrl)
+                    && str(request.resource.data.timestamp, 40);
+
+      allow update: if false;
+      allow delete: if true; // TODO: restrict to admins once Firebase Authentication is set up
     }
+
+    match /comments/{id} {
+      allow read: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(['id', 'newsletterId', 'author', 'content', 'date'])
+                    && request.resource.data.id == id
+                    && str(request.resource.data.newsletterId, 50)
+                    && str(request.resource.data.author, 100)
+                    && str(request.resource.data.content, 2000) && request.resource.data.content.size() > 0
+                    && str(request.resource.data.date, 40);
+
+      allow update: if false;
+      allow delete: if true; // TODO: restrict to admins once Firebase Authentication is set up
+    }
+
+    // Applications are saved in the visitor's browser only — never in the database.
+    match /applications/{id} {
+      allow read, write: if false;
+    }
+
+    // Anything not listed above is blocked.
   }
 }
 
-// NOTE: These rules are VERY PERMISSIVE for testing
-// For production, you should:
-// 1. Add Firebase Authentication
-// 2. Restrict write access to authenticated users only
-// 3. Add admin roles for delete operations
+// NEXT STEP for full protection:
+// 1. Turn on Firebase Authentication (Email/Password) and create an admin account.
+// 2. Replace the in-browser password prompt with a real sign-in.
+// 3. Change each "allow delete: if true" to "allow delete: if request.auth != null"
+//    (or check the admin's specific user ID).
