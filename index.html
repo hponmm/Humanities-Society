@@ -12,7 +12,6 @@
         <div class="container">
             <div class="logo">
                 <h1>Humanities Society</h1>
-                <p>Exploring History, Politics & Sociology</p>
             </div>
             <nav class="nav">
                 <button class="nav-toggle" id="navToggle">
@@ -37,12 +36,10 @@
                     <div class="newsletter-hero-inner">
                         <span class="newsletter-hero-label">Humanities Society</span>
                         <h2>Articles</h2>
-                        <p>History · Politics · Sociology</p>
                     </div>
                 </div>
                 <div class="section-header" style="margin-top: 40px;">
                     <h2>Article Archive</h2>
-                    <p>Stay updated with the latest in history, politics, and humanities achievements and upcoming events</p>
                 </div>
                 <div class="newsletter-controls">
                     <button class="btn-primary" id="addNewsletterBtn">Add New Article</button>
@@ -135,7 +132,6 @@
             <section id="competitions" class="tab-content">
                 <div class="section-header">
                     <h2>Our Hosted Competitions</h2>
-                    <p>Join our exclusive humanities competitions and events - organized by students, for students</p>
                 </div>
                 <div class="event-controls">
                     <button class="btn-primary" id="addEventBtn">Add New Event</button>
@@ -251,13 +247,11 @@
                 <div class="about-banner">
                     <div class="about-banner-text">
                         <h2>Humanities Society</h2>
-                        <p>Harrow International School Hong Kong</p>
                     </div>
                 </div>
 
                 <div class="section-header">
                     <h2>About the Humanities Society</h2>
-                    <p>A platform for students to extend their knowledge and expand their passion for the humanities</p>
                 </div>
 
                 <div class="mission-statement">
@@ -283,7 +277,6 @@
 
                 <div class="section-header">
                     <h3>Meet Our Founders</h3>
-                    <p>The passionate students behind the Humanities Society</p>
                 </div>
                 <div class="founders-grid">
                     <div class="founder-card">
@@ -361,6 +354,10 @@
                             </div>
                             <div class="comment-form-group">
                                 <textarea id="commentContent" maxlength="2000" placeholder="Share your thoughts..." class="comment-textarea" required></textarea>
+                            </div>
+                            <div class="comment-form-group">
+                                <label for="commentDate" class="comment-date-label">Posting Date &amp; Time</label>
+                                <input type="datetime-local" id="commentDate" class="comment-input" required>
                             </div>
                             <button type="submit" class="btn-primary comment-submit-btn">Post Comment</button>
                         </form>

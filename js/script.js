@@ -503,11 +503,16 @@ class HISHKHumanitiesSociety {
 
         const author = newsletter.author || 'Anonymous';
 
-        const hasMedia = newsletter.imageUrl || newsletter.videoUrl;
-        const mediaIndicator = hasMedia ? `
+        const imageUrl = this.safeUrl(newsletter.imageUrl);
+        const videoUrl = this.safeUrl(newsletter.videoUrl);
+        const mediaIndicator = videoUrl ? `
             <div class="newsletter-media-indicators">
-                ${newsletter.imageUrl ? '<span class="media-indicator">📷 Image</span>' : ''}
-                ${newsletter.videoUrl ? '<span class="media-indicator">🎥 Video</span>' : ''}
+                <span class="media-indicator">🎥 Video</span>
+            </div>
+        ` : '';
+        const imagePreview = imageUrl ? `
+            <div class="newsletter-preview-image-wrap">
+                <img src="${this.escapeHtml(imageUrl)}" alt="Image for ${this.escapeHtml(newsletter.title)}" class="newsletter-preview-image">
             </div>
         ` : '';
 
@@ -522,6 +527,7 @@ class HISHKHumanitiesSociety {
                     <span class="newsletter-preview-date">${formattedDate}</span>
                 </div>
                 <p class="newsletter-preview-author">By ${this.escapeHtml(author)}</p>
+                ${imagePreview}
                 ${mediaIndicator}
                 <p class="newsletter-preview-excerpt">${this.escapeHtml(excerpt)}</p>
                 <div class="newsletter-preview-actions">
@@ -580,6 +586,7 @@ class HISHKHumanitiesSociety {
         
         // Store current newsletter ID for comments
         this.currentNewsletterId = newsletterId;
+        this.setCommentDateToNow();
         
         const date = new Date(newsletter.date);
         const formattedDate = date.toLocaleDateString('en-GB', {
@@ -1219,6 +1226,15 @@ class HISHKHumanitiesSociety {
         }
     }
 
+    setCommentDateToNow() {
+        const dateInput = document.getElementById('commentDate');
+        if (dateInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            dateInput.value = now.toISOString().slice(0, 16);
+        }
+    }
+
     async handleCommentSubmit(e) {
         e.preventDefault();
         
@@ -1229,18 +1245,25 @@ class HISHKHumanitiesSociety {
         
         const authorInput = document.getElementById('commentAuthor');
         const contentInput = document.getElementById('commentContent');
+        const dateInput = document.getElementById('commentDate');
         
-        if (!contentInput || !contentInput.value.trim()) {
-            this.showNotification('Please write a comment before submitting.', 'error');
+        if (!contentInput || !contentInput.value.trim() || !dateInput || !dateInput.value) {
+            this.showNotification('Please enter a comment and choose a posting date and time.', 'error');
             return;
         }
-        
+
+        const commentDate = new Date(dateInput.value);
+        if (Number.isNaN(commentDate.getTime())) {
+            this.showNotification('Please choose a valid posting date and time.', 'error');
+            return;
+        }
+
         const comment = {
             id: Date.now().toString(),
             newsletterId: this.currentNewsletterId,
             author: authorInput.value.trim() || 'Anonymous',
             content: contentInput.value.trim(),
-            date: new Date().toISOString()
+            date: commentDate.toISOString()
         };
         
         try {
@@ -1249,6 +1272,7 @@ class HISHKHumanitiesSociety {
             // Clear form
             authorInput.value = '';
             contentInput.value = '';
+            this.setCommentDateToNow();
             
             // Reload comments
             this.loadComments(this.currentNewsletterId);
